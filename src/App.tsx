@@ -396,8 +396,8 @@ const faqData = [
     {/* Right Column -- Image */}
     <div className="relative">
       <img 
-        //src={KlaowtActivity}
-        src={KlaowtTrend}
+        src={KlaowtActivity}
+        //src={KlaowtTrend}
         alt="Klaowt Activity Features"
         className="rounded-lg shadow-xl"
       />
