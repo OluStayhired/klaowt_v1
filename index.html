@@ -1,4 +1,6 @@
+
 <!doctype html>
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -9,7 +11,18 @@
     <meta name="keywords" content="Bluesky social media engagement, content discovery, niche communities, content creators" />  
     <meta property="og:title" content="Grow meaningful relationships faster on Bluesky" />
     <meta property="og:description" content="Klaowt helps you engage effectively with relevant content, creators, and friends in your niche, fostering better interactions and meaningful audience growth." />
-     <meta property="og:image" content="https://www.klaowt.com/src/images/klaowt-meta-image.svg">
+    
+     <script>
+      const metaImage = window.location.origin + '/images/klaowt-meta-image.svg';
+      const ogImage = document.querySelector('meta[property="og:image"]');
+      if (ogImage) {
+        ogImage.setAttribute('content', metaImage);
+      }
+      const twitterImage = document.querySelector('meta[name="twitter:image"]');
+      if (twitterImage) {
+        twitterImage.setAttribute('content', metaImage);
+      }
+    </script>
 
     <meta name="twitter:card" content="https://www.klaowt.com/src/images/klaowt-meta-image.svg" /> 
     <meta name="twitter:title" content="Grow meaningful relationships faster on Bluesky" />
