@@ -217,12 +217,12 @@ const faqData = [
       <main className="max-w-7xl max-h-7xl mx-auto px-4 py-12">
         {!isAuthenticated ? (
           <div className="text-center py-12">
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent mb-4">Grow Meaningful Relationships <br/> Faster on Bluesky
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent mb-4">Grow Organic Relationships <br/> Faster on Bluesky
               <br/> 
               {/*<span className="text-5xl mt-2">with just 30 mins a day</span>*/}
     </h1> 
             {/*<p className="text-gray-600 font-md mb-8 text-lg">Stop wasting time doomscrolling, comment faster on relevant posts to boost your visibility and grow your audience. </p>*/}
-             <p className="text-gray-600 font-md mb-8 text-base">Discover trending posts & engage effortlessly with key accounts in your niche. <br/> Follow relevant creators to build your brand and grow your audience on Bluesky <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-3.5 h-3.5" />  </p>  
+             <p className="text-gray-600 font-md mb-8 text-base">Discover trending posts & engage effortlessly with active profiles in your niche. <br/> Follow relevant creators to build your brand and grow your audience on Bluesky <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-3.5 h-3.5" />  </p>  
             <button
               onClick={() => setIsLoginModalOpen(true)}
               className="px-6 py-3 bg-gradient-to-r from-blue-400 to-indigo-500 text-white rounded-md hover:bg-blue-600 transition-colors"
