@@ -7,26 +7,19 @@
     <link rel="icon" type="image/svg+xml" href="/src/images/Klaowt-logo-48x48.svg"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grow Faster on Bluesky - Klaowt </title>
-    <meta name="description" content="Klaowt helps you engage effectively with relevant content, creators and friends in your niche, fostering better engagement and meaningful audience growth.." />
+    <meta name="description" content="Klaowt makes it easy to discover and engage with trending posts, friends and content creators in your niche without distraction." />
     <meta name="keywords" content="Bluesky social media engagement, content discovery, niche communities, content creators" />  
     <meta property="og:title" content="Grow meaningful relationships faster on Bluesky" />
-    <meta property="og:description" content="Klaowt helps you engage effectively with relevant content, creators, and friends in your niche, fostering better interactions and meaningful audience growth." />
+    <meta property="og:description" content="Klaowt makes it easy to discover and engage with trending posts, friends and content creators in your niche without distraction." />
     
      <script>
-      const metaImage = window.location.origin + '/src/images/Klaowt-meta-image.svg';
-      const ogImage = document.querySelector('meta[property="og:image"]');
-      if (ogImage) {
-        ogImage.setAttribute('content', metaImage);
-      }
-      const twitterImage = document.querySelector('meta[name="twitter:image"]');
-      if (twitterImage) {
-        twitterImage.setAttribute('content', metaImage);
-      }
+      import metaImage from '/src/images/Klaowt-meta-image.svg';
+      <meta property="og:image" content={metaImage} />
     </script>
 
     <meta name="twitter:card" content="https://www.klaowt.com/src/images/Klaowt-meta-image.svg" /> 
     <meta name="twitter:title" content="Grow meaningful relationships faster on Bluesky" />
-    <meta name="twitter:description" content="Klaowt helps you connect with relevant content, creators and friends in your niche, fostering engagement and audience growth." />
+    <meta name="twitter:description" content="Klaowt makes it easy to discover and engage with trending posts, friends and content creators in your niche without distraction. " />
   </head>
   <body>
     <div id="root"></div>
