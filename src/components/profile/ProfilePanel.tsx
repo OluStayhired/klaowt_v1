@@ -119,7 +119,7 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
       {/* New Post Button */}
       <button 
         onClick={() => setIsPostModalOpen(true)}
-        className="w-full flex items-center justify-center text-sm font-normal space-x-1 px-2 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition-colors mx-auto"
+        className="w-full flex items-center justify-center text-sm font-medium space-x-2 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition-colors mx-auto"
       >
         <SquarePen className="w-3 h-3" />
         <span>New Post</span>
