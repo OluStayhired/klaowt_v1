@@ -417,7 +417,9 @@ const faqData = [
     Frequently Asked Questions
   </h2>
   
-  <div className="space-y-4 px-60">
+  {/*<div className="space-y-4 px-60">*/}
+  <div className="space-y-4 px-4 sm:px-6 md:px-12 lg:px-60">
+ 
     {faqData.map((faq) => (
       <div key={faq.id} className="rounded-xl overflow-hidden">
         <button
