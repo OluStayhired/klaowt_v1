@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { 
   ChevronLeft, ChevronRight, MessageCircle, TrendingUp, 
-  Users, Sparkles, NotebookPen, CheckCircle, Megaphone
+  Users, NotebookPen, CheckCircle, Megaphone
 } from 'lucide-react';
-import KlaowtReply from '../../images/KlaowtReply.svg';
-import KlaowtFollow from '../../images/KlaowtFollow.svg';
-import KlaowtTrend from '../../images/KlaowtTrending.svg';
 import BlueskyLogo from '../../images/bluesky-logo.svg';
 import KlaowtTour01 from '../../images/klaowt-quick-tour-images_01.png';
 import KlaowtTour02 from '../../images/klaowt-quick-tour-images_02.png';
@@ -114,7 +111,7 @@ export function QuickTourFocused({ onClose }: QuickTourFocusedProps) {
     <div className="bg-white rounded-2xl w-full shadow-lg">
       <div className="relative">
         {/* Progress bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100 rounded-t-2xl overflow-hidden">
+        <div className="absolute z-50 top-0 left-0 right-0 h-1 bg-gray-100 rounded-t-2xl overflow-hidden">
           <div 
             className="h-full bg-blue-500 transition-all duration-500"
             style={{ width: `${((currentStep + 1) / tourSteps.length) * 100}%` }}

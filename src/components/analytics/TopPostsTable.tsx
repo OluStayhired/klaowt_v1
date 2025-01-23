@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '../../auth';
 
-import { createPortal } from 'react-dom';
-import { X, Clock, Heart, Share2, MessageCircle, ExternalLink, SquarePen } from 'lucide-react';
+//import { createPortal } from 'react-dom';
+import { X, Clock, Heart, Share2, MessageCircle, ExternalLink } from 'lucide-react';
 import { formatNumber } from '../../utils/formatters';
 import { Post } from '../../types/post';
 import { subDays, parseISO } from 'date-fns';
@@ -21,7 +21,7 @@ export function TopPostsTable({ posts, onClose }: TopPostsTableProps) {
   const [sortColumn, setSortColumn] = useState<SortColumn>('likes');
   const [hoveredPost, setHoveredPost] = useState<Post | null>(null);
   const [IsFrozen, setIsFrozen]=useState(false);
-  const [isThreadFrozen, setIsThreadFrozen] = useState(false);
+  //const [isThreadFrozen, setIsThreadFrozen] = useState(false);
   const [frozenPost, setFrozenPost] = useState<Post | null>(null);
   const tableRef = useRef<HTMLDivElement>(null);
   const { agent, user } = useAuthStore();
