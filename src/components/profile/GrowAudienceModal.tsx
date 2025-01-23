@@ -17,6 +17,8 @@ import { InsightsPanel } from '../analytics/InsightsPanel';
 import { TopPostsTable } from '../analytics/TopPostsTable';
 import { ContributorsTable } from '../analytics/ContributorsTable';
 import { usePopularFeeds } from '../../hooks/usePopularFeeds';
+//import { TourGuideModal } from './TourGuideModal';
+import { QuickTourFocused } from './QuickTourFocused';
 
 interface GrowAudienceModalProps {
   isOpen: boolean;
@@ -43,8 +45,9 @@ export function GrowAudienceModal({ isOpen, onClose }: GrowAudienceModalProps) {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [selectedSubsection, setSelectedSubsection] = useState<string | null>(null);
   const [selectedFeed, setSelectedFeed] = useState<Feed | null>(null);
-   const { feeds, refetchFeeds } = usePopularFeeds();
+  const { feeds, refetchFeeds } = usePopularFeeds();
   const { agent, user } = useAuthStore();
+  const [showTour, setShowTour] = useState(false);
 
     // Add useEffect here to initialize usePopularFeeds
   useEffect(() => {
@@ -68,6 +71,10 @@ export function GrowAudienceModal({ isOpen, onClose }: GrowAudienceModalProps) {
   const [topPosts, setTopPosts] = useState<Post[]>([]);
   const [contributors, setContributors] = useState<ContributorStats[]>([]);
   const [previousScreen, setPreviousScreen] = useState<Screen | null>(null);
+  const [showQuickTour, setShowQuickTour] = useState(false);
+  const [previousScreenBeforeTour, setPreviousScreenBeforeTour] = useState<Screen | null>(null);
+
+
 
 
 
@@ -226,6 +233,7 @@ useEffect(() => {
     setContributors([]);
   }
 }, [currentScreen]);
+
   
  // const handleTurnCommentToPost = async () => {
  //   if (!selectedComment) return;
@@ -1021,10 +1029,16 @@ const renderContributors = () => {
             </div>
             <span className="flex">
               <span>
-            <button className="px-2 py-1 mr-1 items-right text-sm bg-gray-500 text-white hover:bg-blue-500 text-white rounded transition-colors flex items-center">
+                  <button 
+                      onClick={() => {
+                        setPreviousScreenBeforeTour(currentScreen);
+                        setShowQuickTour(true);
+                      }}
+
+                  className="px-2 py-1 mr-1 items-right text-sm bg-blue-500 text-white hover:bg-blue-600 rounded transition-colors flex items-center">
               <Video className="w-5 h-5 font-normal mr-2" /> 
-              <p className="font-normal">Quick Guide (coming soon)</p> 
-            </button>
+                <p className="font-normal">Quick Guide</p> 
+                    </button>
             </span>
             <span>
             <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-full transition-colors">
@@ -1036,8 +1050,18 @@ const renderContributors = () => {
 
           {/* Content */}
           <div className="p-4 max-h-[calc(100vh-10rem)] overflow-y-auto">
-
-            {currentScreen === 'main' ? (
+            {/*Start Quick Tour Logic*/}
+  {showQuickTour ? (
+    <QuickTourFocused 
+      onClose={() => {
+        setShowQuickTour(false);
+        if (previousScreenBeforeTour) {
+          setCurrentScreen(previousScreenBeforeTour);
+          setPreviousScreenBeforeTour(null);
+        }
+      }}
+    />
+  ) : currentScreen === 'main' ? (
               // Start Keep existing main screen JSX...
             <div className="grid grid-cols-2 gap-4">
                 <button
@@ -1080,6 +1104,5 @@ const renderContributors = () => {
       </div>
     </div>
   );
-
   return createPortal(modal, portalRoot);
 }

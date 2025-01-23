@@ -2,6 +2,44 @@ import { useState, useEffect } from 'react';
 import { useAuthStore } from '../auth';
 import { Feed } from '../types/feed';
 
+// Define proper interfaces for type safety
+interface FeedResponse {
+  uri: string;
+  displayName: string;
+  description?: string;
+  creator: {
+    did: string;
+    handle: string;
+    displayName?: string;
+    avatar?: string;
+  };
+  avatar?: string;
+  likeCount?: number;
+  viewerCount?: number;
+}
+
+interface CacheEntry {
+  data: FeedResponse[];
+  timestamp: number;
+}
+
+interface RateLimit {
+  count: number;
+  resetTime: number;
+}
+
+// Cache and rate limiting constants
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const MAX_REQUESTS = 5; // Max requests per minute
+
+// Cache and rate limit tracking
+const feedCache: { [key: string]: CacheEntry } = {};
+const rateLimit: RateLimit = {
+  count: 0,
+  resetTime: Date.now() + RATE_LIMIT_WINDOW
+};
+
 // Suggested new hook: usePopularFeeds
 export function usePopularFeeds() {
   const [feeds, setFeeds] = useState<{[key: string]: Feed}>({});
