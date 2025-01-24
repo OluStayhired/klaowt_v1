@@ -106,8 +106,8 @@ const convertUrlsToLinks = (text: string) => {
     return diffInHours >= 24 ? `${diffInDays}d` : `${diffInHours}h`;
   };
 
-  const truncatedText = post.record.text.slice(0, 80);
-  const shouldTruncate = post.record.text.length > 80;
+  const truncatedText = post.record.text.slice(0, 120);
+  const shouldTruncate = post.record.text.length > 120;
 
 useEffect(() => {
   async function fetchEmbeddedPost() {

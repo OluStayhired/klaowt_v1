@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '../../auth';
 
-//import { createPortal } from 'react-dom';
-import { X, Clock, Heart, Share2, MessageCircle, ExternalLink } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { X, Clock, Heart, Share2, MessageCircle, ExternalLink, SquarePen } from 'lucide-react';
 import { formatNumber } from '../../utils/formatters';
 import { Post } from '../../types/post';
 import { subDays, parseISO } from 'date-fns';
@@ -21,7 +21,7 @@ export function TopPostsTable({ posts, onClose }: TopPostsTableProps) {
   const [sortColumn, setSortColumn] = useState<SortColumn>('likes');
   const [hoveredPost, setHoveredPost] = useState<Post | null>(null);
   const [IsFrozen, setIsFrozen]=useState(false);
-  //const [isThreadFrozen, setIsThreadFrozen] = useState(false);
+  const [isThreadFrozen, setIsThreadFrozen] = useState(false);
   const [frozenPost, setFrozenPost] = useState<Post | null>(null);
   const tableRef = useRef<HTMLDivElement>(null);
   const { agent, user } = useAuthStore();
@@ -201,7 +201,7 @@ useEffect(() => {
   };
 
   const truncateText = (text: string) => {
-    return text.length > 22 ? text.substring(0, 22) + '...' : text;
+    return text.length > 30 ? text.substring(0, 30) + '...' : text;
   };
 
   const getColumnIcon = (column: SortColumn) => {
@@ -386,7 +386,7 @@ useEffect(() => {
               <p className="text-xs text-gray-800  whitespace-pre-wrap break-words mt-2">{(IsFrozen ? frozenPost : hoveredPost).record.text}</p>
               {(IsFrozen ? frozenPost : hoveredPost).record.embed && (IsFrozen ? frozenPost : hoveredPost).record.embed?.images && (IsFrozen ? frozenPost : hoveredPost).record.embed?.images.length > 0 && (
 <div className="flex-grow relative text-gray-800 grid grid-cols-2">
-  <div className={`grid gap-0.5 ${
+  <div className={`flex-grow grid gap-0.5 ${
       (IsFrozen ? frozenPost : hoveredPost).record.embed.images.length === 1 ? 'grid-cols-1' :
       (IsFrozen ? frozenPost : hoveredPost).record.embed.images.length === 2 ? 'grid-cols-2' :
       (IsFrozen ? frozenPost : hoveredPost).record.embed.images.length === 3 ? 'grid-cols-2' :
@@ -402,7 +402,7 @@ useEffect(() => {
               : ''
           }`}>
           
-  <img className="rounded-md w-full h-full object-cover"
+  <img className="flex rounded-md w-full h-auto object-contain"
 src={
 `https://cdn.bsky.app/img/feed_thumbnail/plain/${(IsFrozen ? frozenPost : hoveredPost).author.did}/${image.image?.ref?.asCID.toString()}@jpeg`}
 alt={`Post Image ${index + 1}`}

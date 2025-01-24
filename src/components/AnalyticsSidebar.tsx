@@ -25,7 +25,9 @@ export function AnalyticsSidebar({ feed, onClose }: AnalyticsSidebarProps) {
   const showSettingsTab = feed.category === 'Custom';
 
   return (
-    <div className="w-96 bg-white border-l border-gray-200 h-screen overflow-hidden flex flex-col">
+<div className="w-[450px] shadow-xl bg-white border-l border-gray-200 h-screen overflow-hidden flex flex-col [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400">
+
+    {/*<div className="w-96 bg-white border-l border-gray-200 h-screen overflow-hidden flex flex-col"> */}
       {/* Fixed Header */}
       <div className="flex-shrink-0 bg-white border-b border-gray-200 pt-[72px]">
         <div className="relative px-4 py-4">
@@ -129,7 +131,9 @@ export function AnalyticsSidebar({ feed, onClose }: AnalyticsSidebarProps) {
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto">
+  {/*<div className="flex-1 overflow-y-auto">*/}
+  <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400">
+
         <div className="p-4">
           {activeTab === 'posts' && (
             <PostsList 

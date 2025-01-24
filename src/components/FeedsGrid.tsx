@@ -200,9 +200,18 @@ function determineFeedCategory(text: string): string {
   };
 
   return (
-    <div className="flex">
-      
-      <div className={`flex-1 space-y-6 transition-all ${selectedFeed ? 'mr-96' : ''}`}>
+    <div className="flex relative">
+       {selectedFeed && (
+        <div className="fixed width-450 left-384 top-0 h-screen transition-transform duration-300 transform">
+          {/*<div className="fixed width-120 right-0 top-0 h-screen">*/}
+          <AnalyticsSidebar
+            feed={selectedFeed}
+            onClose={handleCloseSidebar}
+          />
+        </div>
+      )}      
+      <div className={`bg-gradient-to-l from-white via-gray-100 to-blue-100 space-y-3 bg-gray-50/50 p-3 rounded-xl flex-1 space-y-6 transition-all ${
+  selectedFeed ? 'ml-[480px]' : 'mr-[0px]'}`}>
         <SearchBar onSearch={handleSearch} />
         <div className="h-px bg-gray-200 my-4"></div>
         <div className="flex items-center justify-between space-y-0 h-1">
@@ -226,7 +235,11 @@ function determineFeedCategory(text: string): string {
           />
         )}
 
-        <div className={`grid ${selectedFeed ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'} gap-4`}>
+        <div className={`grid ${
+      selectedFeed 
+    ? 'grid-cols-1 md:grid-cols-2' 
+    : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+} gap-4 transition-all duration-300`}>
           {sortedFeeds.map((feed) => (
             <FeedCard
               key={feed.uri}
@@ -249,15 +262,7 @@ function determineFeedCategory(text: string): string {
         )}
       </div>
 
-      {selectedFeed && (
-        <div className="fixed width-120 right-0 top-0 h-screen">
-          {/*<div className="fixed width-120 right-0 top-0 h-screen">*/}
-          <AnalyticsSidebar
-            feed={selectedFeed}
-            onClose={handleCloseSidebar}
-          />
-        </div>
-      )}
+      {/*Previous location for Analytics SideBar*/}
     </div>
   );
 }

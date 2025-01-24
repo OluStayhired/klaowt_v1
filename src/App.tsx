@@ -396,8 +396,8 @@ const faqData = [
     {/* Right Column -- Image */}
     <div className="relative">
       <img 
-        src={KlaowtActivity}
-        //src={KlaowtTrend}
+        //src={KlaowtActivity}
+        src={KlaowtTrend}
         alt="Klaowt Activity Features"
         className="rounded-lg shadow-xl"
       />
@@ -419,7 +419,6 @@ const faqData = [
   
   {/*<div className="space-y-4 px-60">*/}
   <div className="space-y-4 px-4 sm:px-6 md:px-12 lg:px-60">
- 
     {faqData.map((faq) => (
       <div key={faq.id} className="rounded-xl overflow-hidden">
         <button

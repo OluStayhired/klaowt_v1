@@ -84,9 +84,9 @@ export function ActivityTracker() {
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
             >
-              <Info className="w-3 h-3 text-gray-400 ml-1"/> 
+              <Info className="w-3 h-3 text-gray-400 ml-0"/> 
               {showTooltip && (
-                <div className="flex-1 absolute ml-5 bg-gray-800 w-full text-xs text-white px-2 py-1 rounded-md shadow-sm max-w-48 max-h-24 z-10 mb-10">
+              <div className="flex-1 absolute ml-0 bg-gray-800 w-full text-xs text-white px-1 py-1 rounded-md shadow-sm max-w-40 max-h-24 z-50000 mb-10">
                   Aim for an engagement score of 35% before you post.↗️
                 </div>
               )}

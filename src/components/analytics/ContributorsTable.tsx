@@ -138,10 +138,10 @@ export function ContributorsTable({ contributors }: ContributorsTableProps) {
                     />
                     <div>
                       <p className="text-xs font-medium text-gray-900">
-                        {truncateText(contributor.displayName || contributor.handle, 10)}
+                        {truncateText(contributor.displayName || contributor.handle, 20)}
                       </p>
                       <p className="text-xs text-gray-500">
-                        @{truncateText(contributor.handle, 10)}
+                        @{truncateText(contributor.handle, 20)}
                       </p>
                     </div>
                   </div>
