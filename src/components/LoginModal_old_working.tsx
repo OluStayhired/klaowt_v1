@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { X, Loader2, AlertCircle } from 'lucide-react';
 import { useAuthStore } from '../auth';
 import { getSavedCredentials } from '../utils/userOperations';
-import BlueskyLogo from '../images/bluesky-logo.svg';
-// Add these imports at the top if not already present
-import { supabase } from '../lib/supabase';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -23,129 +20,58 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [isCheckingCredentials, setIsCheckingCredentials] = useState(false);
   const { login, isLoading, error, clearError, isAuthenticated } = useAuthStore();
 
-  // Add debounce utility at the top of LoginModal.tsx
-const debounce = (func: Function, wait: number) => {
-  let timeout: NodeJS.Timeout;
-  return (...args: any[]) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-};
-
-const MIN_HANDLE_LENGTH = 7; // Add constant at top of file
-  
-//Start New Check Credentials Service
-// Separate credential check service
-const credentialCheckService = {
-  // AbortController instance for cancelling requests
-  controller: new AbortController(),
-
-  // Reset the controller
-  resetController() {
-    this.controller.abort();
-    this.controller = new AbortController();
-  },
-
-  // Check credentials function
-  async checkCredentials(handle: string) {
-    if (!handle) return null;
-
-    try {
-      // Reset controller for new request
-      this.resetController();
-
-      const { data, error } = await supabase
-        .from('users')
-        .select('app_password')
-        .eq('handle', handle)
-        .eq('remember_me', true)
-        .single();
-
-      if (error) {
-        if (error.code === 'PGRST116') { // No rows found
-          return null;
+  // Check for saved credentials when modal opens
+  useEffect(() => {
+    async function checkSavedCredentials() {
+      if (!isOpen || !identifier) return;
+      
+      setIsCheckingCredentials(true);
+      try {
+        const savedPassword = await getSavedCredentials(identifier.replace('@', ''));
+        if (savedPassword) {
+          setPassword(savedPassword);
+          setRememberMe(true);
+          debugLog('Found saved credentials');
         }
-        throw error;
+      } catch (err) {
+        console.error('Error checking saved credentials:', err);
+      } finally {
+        setIsCheckingCredentials(false);
       }
-
-      return data?.app_password || null;
-    } catch (err) {
-      if (err.name === 'AbortError') {
-        // Request was cancelled, ignore
-        return null;
-      }
-      console.error('Error checking credentials:', err);
-      return null;
     }
-  },
 
-  // Cleanup function
-  cleanup() {
-    this.controller.abort();
-  }
-};
+    checkSavedCredentials();
+  }, [isOpen, identifier]);
 
-// Debounced version of credential check
-const debouncedCheckCredentials = debounce(async (handle: string, setPassword: (pwd: string) => void) => {
-  if (!shouldCheckCredentials(handle)) return;
-
-  const savedPassword = await credentialCheckService.checkCredentials(handle);
-  if (savedPassword) {
-    setPassword(savedPassword);
-    setRememberMe(true);
-  }
-}, 500);
-
-// Handle input change with credential check
-const handleIdentifierChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const newHandle = e.target.value; //.replace(/^@+/, '');
-
-   let newValue = newHandle;
+// In LoginModal.tsx, add this function:
+const fetchSavedCredentials = async (handle: string) => {
+  if (!handle) return;
   
-  // If user starts typing without @, add it
-  if (newValue && !newValue.startsWith('@')) {
-    newValue = '@' + newValue;
-  }
-  setIdentifier(newHandle);
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('app_password')
+      .eq('handle', handle)
+      .eq('remember_me', true)
+      .single();
 
-  // Strip @ for credential checking
-  const handleForCheck = newValue.replace(/^@+/, '');
+    if (error) {
+      if (error.code !== 'PGRST116') { // Ignore "no rows returned" error
+        console.error('Error fetching saved credentials:', error);
+      }
+      return;
+    }
 
-  // Only check credentials if handle meets requirements
-  if (shouldCheckCredentials(newHandle)) {
-    debouncedCheckCredentials(newHandle, setPassword);
+    if (data?.app_password) {
+      setPassword(data.app_password);
+      setRememberMe(true);
+    }
+  } catch (err) {
+    console.error('Error checking saved credentials:', err);
   }
 };
 
-// Cleanup on unmount
-useEffect(() => {
-  return () => {
-    credentialCheckService.cleanup();
-  };
-}, []);
-
-//End Check Credentials Service  
-
-
-//  
-// Add validation function
-const shouldCheckCredentials = (handle: string) => {
-    // Remove @ for validation
-  const cleanHandle = handle.replace(/^@+/, '');
-  return handle.length >= MIN_HANDLE_LENGTH && 
-         handle.includes('.'); // Basic handle format check
-};
-
-// Add AbortController for request cancellation
-const abortController = new AbortController();
-
-// Cleanup function in useEffect
-useEffect(() => {
-  return () => {
-    abortController.abort(); // Cancel pending requests on unmount
-  };
-}, []);
-
+  
   // Reset form when modal closes
   useEffect(() => {
     if (!isOpen) {
@@ -177,11 +103,7 @@ useEffect(() => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Strip @ before sending to API
-  const cleanIdentifier = identifier.replace(/^@+/, '');
-    
-    //debugLog('Login form submitted', { identifier });
+    debugLog('Login form submitted', { identifier });
     
     if (!validateForm()) {
       return;
@@ -210,22 +132,21 @@ useEffect(() => {
         >
           <X className="w-5 h-5" />
         </button>
-        <h2 className="text-2xl font-bold mb-6">Login to BlueSky <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-5 h-5" />
-        </h2>
-         
+        <h2 className="text-2xl font-bold mb-6">Login to BlueSky</h2>
+        
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
           <div className="flex items-start space-x-2">
             <AlertCircle className="w-5 h-5 text-blue-500 mt-0.5" />
             <div className="text-sm text-blue-700">
               <p className="font-medium">Important:</p>
               <ol className="list-decimal ml-4 mt-1 space-y-1">
-                <li>Use your full BlueSky handle <br/> (e.g. @username.bsky.social)</li>
-                <li>Create a new app password <a
+                <li>Use your full BlueSky handle (e.g., @username.bsky.social)</li>
+                <li>Create a new app password from <a
                   href="https://bsky.app/settings/app-passwords"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:underline"
-                ><u><b>on Bluesky</b></u></a></li>
+                >BlueSky Settings</a></li>
                 <li>Do not use your account password</li>
               </ol>
             </div>
@@ -248,7 +169,14 @@ useEffect(() => {
               id="username"
               autoComplete="username"
               value={identifier}
-              onChange={handleIdentifierChange}
+              onChange={(e) => {
+                 setIdentifier(e.target.value);
+                 // Add debounce to avoid too many requests
+                 if (e.target.value) {
+                 const handle = e.target.value.replace(/^@+/, '');
+                 fetchSavedCredentials(handle);
+                  }
+              }}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="@username.bsky.social"
               disabled={isLoading || isCheckingCredentials}
