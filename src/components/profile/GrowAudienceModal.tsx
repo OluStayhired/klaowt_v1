@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { 
   X, TrendingUp, MessageCircle, Copy, Trash2, ArrowLeft, Sparkles, NotebookPen, 
   Users, UserCheck, Megaphone, Radio, Trophy, UserPlus, MessagesSquare, Bell,
-  UserRoundCheck, Flame, Crown, PinIcon, ChevronDown, ChevronUp, ChevronRight, ChevronLeft, Loader2, Video
+  UserRoundCheck, Flame, Crown, PinIcon, ChevronDown, ChevronUp, ChevronRight, ChevronLeft, Loader2, Video, CheckCircle
 } from 'lucide-react';
 import { Clock, Heart, Share2, Send } from 'lucide-react';
 import { CheckCheck } from 'lucide-react';
@@ -19,6 +19,10 @@ import { ContributorsTable } from '../analytics/ContributorsTable';
 import { usePopularFeeds } from '../../hooks/usePopularFeeds';
 //import { TourGuideModal } from './TourGuideModal';
 import { QuickTourFocused } from './QuickTourFocused';
+import { EngageTimer } from './EngageTimer';
+import { BlueskyTimer } from './BlueskyTimer';
+//import { EngageTimer } from './EngageTimer_1';
+//import { FloatingEngageTimer } from './FloatingEngageTimer';
 
 interface GrowAudienceModalProps {
   isOpen: boolean;
@@ -762,6 +766,11 @@ const renderFeedView = () => {
               <p className="text-sm text-gray-500">
                 {selectedFeed.description || `Posts from ${selectedFeed.creator.displayName || selectedFeed.creator.handle}`}
               </p>
+               <BlueskyTimer
+                  initialMinutes={20}
+                  showControls={true}
+                  autoStart={false}
+                />
             </div>
           </div>
         </div>
@@ -837,7 +846,7 @@ const renderFeedView = () => {
                           <p className="text-xs text-gray-500">{subsection.description}</p>
                         </div>
                       </div>
-                      <CheckCheck className={`w-5 h-5 text-gray-400 transition-transform ${
+                      <CheckCircle className={`w-5 h-5 text-blue-300 transition-transform ${
                         selectedSubsection === subsection.id ? '' : ''
                       }`} />
                     </div>
@@ -870,10 +879,25 @@ const renderTopPosts = () => {
             className="w-10 h-10 rounded"
           />
           <div>
-            <h3 className="font-medium text-gray-900">Trending Posts from Friends</h3>
+            {/*<h3 className="font-medium text-gray-900">Trending Posts from Friends</h3>
             <p className="text-sm text-gray-500">
               Engage with the most popular posts from your mutual followers
+            </p> */}
+            <h3 className="font-medium text-gray-900">
+              {selectedSubsection === 'friends-post' ? 
+                'Trending Posts from Creators' : 
+                'Trending Posts from Friends'}
+            </h3>
+            <p className="text-sm text-gray-500">
+              {selectedSubsection === 'friends-post' ?
+                'Engage with viral posts from top creators in your niche'
+                :'Engage with popular posts from your mutual followers'}
             </p>
+             <BlueskyTimer
+                  initialMinutes={15}
+                  showControls={true}
+                  autoStart={false}
+                />
           </div>
         </div>
       </div>
@@ -916,9 +940,11 @@ const renderPopularTopPosts = () => {
             </h3>
             <p className="text-sm text-gray-500">
               {selectedSubsection === 'creator-posts' ?
-                'Engage with viral posts from top creators in your niche' :
-                'Engage with popular posts from your mutual followers'}
+                'Engage with viral posts from top creators in your niche'
+                :'Engage with popular posts from top creators'
+              }
             </p>
+
           </div>
         </div>
       </div>
@@ -947,13 +973,18 @@ const renderContributors = () => {
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-lg shadow-sm p-4 border-b border-gray-100">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 top-0 left-0 right-0 z-[1000001]">
           <Trophy className="w-10 h-10 text-blue-500" />
           <div>
             <h3 className="font-medium text-gray-900">Top Contributors</h3>
             <p className="text-sm text-gray-500">
               Track and Follow the most popular creators with your friends
             </p>
+             <BlueskyTimer
+                  initialMinutes={10}
+                  showControls={true}
+                  autoStart={false}
+                />
           </div>
         </div>
       </div>
