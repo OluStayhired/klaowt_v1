@@ -25,6 +25,7 @@ import KlaowtNoshare from './images/KlaowtNoshare.svg';
 import KlaowtReply from './images/KlaowtReply.svg';
 import KlaowtFollow from './images/KlaowtFollow.svg';
 import KlaowtActivity from './images/KlaowtActivity.svg';
+import klaowtIcon from './images/klaowt-in-app-icon.svg';
 
 
 function App() {
@@ -188,8 +189,12 @@ const faqData = [
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              {/*<Bookmark className="w-8 h-8 p-1.5 font-light fill-white stroke-white bg-gradient-to-r from-blue-400 to-indigo-600 rounded" />*/}
-              <Megaphone className="w-8 h-8 p-1.5 font-light stroke-white bg-gradient-to-r from-blue-400 to-indigo-600 rounded" />
+             
+              {/*<Megaphone className="w-8 h-8 p-1.5 font-light stroke-white bg-gradient-to-r from-blue-400 to-indigo-600 rounded" />*/}
+    
+        <img src={klaowtIcon} alt="Klaowt Icon in-App" className=" inline-block w-9 h-9 bg-blue-200 p-1.5 rounded-full" />
+      
+             
               {/*<h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">Klaowt!</h1>*/}
               <h1 className="text-xl font-bold bg-blue-500 bg-clip-text text-gray-900">Klaowt</h1>
               {/*<span className="text-gray-800 px-2 bg-yellow-400 rounded font-bold"> beta </span>*/}
@@ -469,26 +474,23 @@ const faqData = [
 
 <footer className="mt-24 border-t border-gray-300 text-left">
   <div className="max-w-7xl mx-auto px-4 py-12">
-    <div className="grid grid-cols-4 gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"> {/* Responsive grid */}
       {/* Company Info */}
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
-          {/*<Megaphone className="w-6 h-6 text-blue-500" />*/}
-          <Megaphone className="w-8 h-8 p-1.5 font-light stroke-white bg-gradient-to-r from-blue-400 to-indigo-600 rounded" />
+          <img src={klaowtIcon} alt="Klaowt Icon in-App" className="w-9 h-9 bg-blue-200 p-1.5 rounded-full" />
           <span className="font-bold text-xl">Klaowt</span>
         </div>
-        <p className="text-sm text-left text-gray-600">
-         The smart solution for audience builders on Bluesky <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-3 h-3 align-middle" />.
-        </p> 
-        <div className="flex space-x-4">
-          {/* Social links */}
-        </div>
+        <p className="text-sm text-gray-600">
+          The smart solution for audience builders on Bluesky <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-3 h-3 align-middle" />.
+        </p>
+        {/* Social links */}
       </div>
 
       {/* Product Links */}
       <div>
         <h3 className="font-semibold mb-4">Product</h3>
-        <ul className="space-y-2 text-left text-sm text-gray-600">
+        <ul className="space-y-2 text-sm text-gray-600">
           <li>Features</li>
           <li>Pricing</li>
           <li>Beta Access</li>
@@ -499,7 +501,7 @@ const faqData = [
       {/* Resources */}
       <div>
         <h3 className="font-semibold mb-4">Resources</h3>
-        <ul className="space-y-2 text-left text-sm text-gray-600">
+        <ul className="space-y-2 text-sm text-gray-600">
           <li>Blog</li>
           <li>Documentation</li>
           <li>Support</li>
@@ -510,7 +512,7 @@ const faqData = [
       {/* Legal */}
       <div>
         <h3 className="font-semibold mb-4">Legal</h3>
-        <ul className="space-y-2 text-left text-sm text-gray-600">
+        <ul className="space-y-2 text-sm text-gray-600">
           <li>Privacy Policy</li>
           <li>Terms of Service</li>
           <li>Cookie Policy</li>
@@ -520,9 +522,10 @@ const faqData = [
 
     {/* Bottom bar */}
     <div className="mt-12 pt-8 border-t border-gray-200">
-      <div className="flex items-center justify-between text-sm text-gray-600">
-        <p>© 2024 Klaowt.com All rights reserved.</p>
-        <div className="flex space-x-6">
+      <div className="flex flex-col sm:flex-row items-center justify-between text-sm text-gray-600"> {/* Responsive flex */}
+        <p className="order-2 sm:order-1">&copy; 2024 Klaowt.com All rights reserved.</p> {/* Order for mobile */}
+        <div className="flex space-x-6 order-1 sm:order-2"> 
+          {/* Order for mobile */}
           <span>Made with ❤️ for the Bluesky community</span>
           <a href="https://bsky.app/profile/oluadedeji.bsky.social" className="text-blue-500 hover:text-blue-600">
             @oluadedeji.bsky.social

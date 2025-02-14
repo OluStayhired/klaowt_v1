@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { 
   X, TrendingUp, MessageCircle, Copy, Trash2, ArrowLeft, Sparkles, NotebookPen, 
@@ -17,12 +17,12 @@ import { InsightsPanel } from '../analytics/InsightsPanel';
 import { TopPostsTable } from '../analytics/TopPostsTable';
 import { ContributorsTable } from '../analytics/ContributorsTable';
 import { usePopularFeeds } from '../../hooks/usePopularFeeds';
-//import { TourGuideModal } from './TourGuideModal';
 import { QuickTourFocused } from './QuickTourFocused';
-import { EngageTimer } from './EngageTimer';
 import { BlueskyTimer } from './BlueskyTimer';
 //import { EngageTimer } from './EngageTimer_1';
 //import { FloatingEngageTimer } from './FloatingEngageTimer';
+//import { EngageTimer } from './EngageTimer';
+//import { TourGuideModal } from './TourGuideModal';
 
 interface GrowAudienceModalProps {
   isOpen: boolean;
@@ -30,7 +30,6 @@ interface GrowAudienceModalProps {
 }
 
 type Screen = 'main' | 'planContent' | 'convert' | 'engagement' | 'feed-view' | 'contributors';
-
 
 interface AccordionSection {
   id: string;
@@ -52,6 +51,9 @@ export function GrowAudienceModal({ isOpen, onClose }: GrowAudienceModalProps) {
   const { feeds, refetchFeeds } = usePopularFeeds();
   const { agent, user } = useAuthStore();
   const [showTour, setShowTour] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+
+  
 
     // Add useEffect here to initialize usePopularFeeds
   useEffect(() => {
@@ -60,12 +62,15 @@ export function GrowAudienceModal({ isOpen, onClose }: GrowAudienceModalProps) {
     }
   }, [agent, refetchFeeds]);
 
+  useEffect(() => {
+  console.log('showNotification state changed:', showNotification);
+}, [showNotification]);
+
   // Keep existing state variables... .
   const [comments, setComments] = useState<any[]>([]);
   const [selectedComment, setSelectedComment] = useState<any>(null);
   const [convertedText, setConvertedText] = useState('');
   const [loading, setLoading] = useState();
-   //const { agent, user } = useAuthStore() ;
   const [hoveredComment, setHoveredComment] = useState<string | null>(null);
   const portalRoot = document.getElementById('portal-root') || document.body;
   const { improveComment, turnCommentToPost } = useGemini();
@@ -78,16 +83,42 @@ export function GrowAudienceModal({ isOpen, onClose }: GrowAudienceModalProps) {
   const [showQuickTour, setShowQuickTour] = useState(false);
   const [previousScreenBeforeTour, setPreviousScreenBeforeTour] = useState<Screen | null>(null);
 
-
-
-
-
 const [notification, setNotification] = useState<{
   message: string;
   type: 'success' | 'error';
 } | null>(null);
 
+  const handleShowNotification = useCallback(() => {
+  //console.log('handleShowNotification called');
+  //console.log('Previous showNotification state:', showNotification);
+  setShowNotification(true);
+  //console.log('Setting showNotification to true');
+  setTimeout(() => {
+  //console.log('Timeout triggered, setting showNotification to false');
+    setShowNotification(false);
+  }, 5000);
+}, []);
 
+  const onTimeUp = useCallback(() => {
+    // Handle time up logic if needed
+  }, []);
+
+    const onTimeUpdate = useCallback((remainingSeconds: number) => {
+    // Handle time update logic if needed
+  }, []);
+
+  // Add z-index management
+const notificationStyles = {
+  position: 'fixed',
+  top: '4rem', // 16 in tailwind
+  left: '50%',
+  transform: 'translateX(-50%)',
+  zIndex: 1000002, // Higher than modal's z-index
+  display: 'flex',
+  justifyContent: 'right', // Center horizontally
+  alignItems: 'right',
+};
+  
   const handleSuccessfulPost = () => {
   // Show success notification
   setNotification({
@@ -769,7 +800,10 @@ const renderFeedView = () => {
                <BlueskyTimer
                   initialMinutes={20}
                   showControls={true}
-                  autoStart={false}
+                  autoStart={true}
+                  onTimeUp={onTimeUp} // Pass memoized callbacks
+                  onTimeUpdate={onTimeUpdate} // Pass memoized callbacks
+                  onShowNotification={handleShowNotification} 
                 />
             </div>
           </div>
@@ -896,7 +930,10 @@ const renderTopPosts = () => {
              <BlueskyTimer
                   initialMinutes={15}
                   showControls={true}
-                  autoStart={false}
+                  autoStart={true}
+                  onTimeUp={onTimeUp} // Pass memoized callbacks
+                  onTimeUpdate={onTimeUpdate} // Pass memoized callbacks
+                  onShowNotification={handleShowNotification} 
                 />
           </div>
         </div>
@@ -980,10 +1017,13 @@ const renderContributors = () => {
             <p className="text-sm text-gray-500">
               Track and Follow the most popular creators with your friends
             </p>
-             <BlueskyTimer
+              <BlueskyTimer
                   initialMinutes={10}
                   showControls={true}
-                  autoStart={false}
+                  autoStart={true}
+                  onTimeUp={onTimeUp} // Pass memoized callbacks
+                  onTimeUpdate={onTimeUpdate} // Pass memoized callbacks
+                  onShowNotification={handleShowNotification} 
                 />
           </div>
         </div>
@@ -1008,7 +1048,17 @@ const renderContributors = () => {
   const modal = (
     <div className="fixed inset-0 z-[1000000] overflow-hidden">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      
+      {/* Notification placement is now controlled here */}
+      {showNotification && (
+//console.log('Rendering notification component:', { showNotification }),   
+      <div 
+        style={notificationStyles}
+        
+        className="bg-red-500 text-white px-4 py-2 rounded-full shadow-lg flex items-center space-x-2 animate-bounce">
+          <Bell className="w-4 h-4" />
+          <span className="text-sm whitespace-nowrap">5 minutes remaining!</span>
+        </div>
+      )}
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <div className="bg-white rounded-xl w-full max-w-2xl shadow-2xl" onClick={e => e.stopPropagation()}>
           {/* Header */}
