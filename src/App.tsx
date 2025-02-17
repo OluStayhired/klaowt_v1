@@ -245,11 +245,9 @@ const faqData = [
       <main className="max-w-7xl max-h-7xl mx-auto px-4 py-12">
         {!isAuthenticated ? (
           <div className="text-center py-12">
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent mb-4">Grow Organic Relationships <br/> Faster on Bluesky
-              <br/> 
-              {/*<span className="text-5xl mt-2">with just 30 mins a day</span>*/}
+            <h1 className="text-6xl pb-3 font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent mb-4">Grow Organic Relationships <br/> Faster on Bluesky
+              <br/>     
     </h1> 
-            {/*<p className="text-gray-600 font-md mb-8 text-lg">Stop wasting time doomscrolling, comment faster on relevant posts to boost your visibility and grow your audience. </p>*/}
              <p className="text-gray-600 font-md mb-8 text-base">Discover trending posts & engage effortlessly with active profiles in your niche. <br/> Follow relevant creators to build your brand and grow your audience on Bluesky <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-3.5 h-3.5" />  </p>  
             <button
               onClick={() => setIsLoginModalOpen(true)}
@@ -278,8 +276,8 @@ const faqData = [
 {/* Start New Section */}
 <div className="mt-16 text-center">
   <span className="mb-2 bg-blue-50 text-lg border-1 rounded-full text-blue-600 mt-16"> Here's the Problem . . .😓 </span>
-  <h2 className="text-4xl font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent">
-    Building a Bluesky Audience <br/> from Scratch is hard. 
+  <h2 className="text-4xl pb-1 font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent">
+    Building a Social Media Audience is hard. 
   </h2>
   {/* Start NoShare Image */}
   <div className="max-w-4xl mx-auto">
@@ -296,11 +294,11 @@ const faqData = [
       <span className="mb-2 bg-blue-50 text-lg border-1 rounded-full text-gray-700"> We have the Solution . . .🙌 </span>
 <h2 className="text-4xl font-bold mt-10 text-gray-500">
   <>
-    Discover{' '}
+    Use{' '}
     <span className="text-blue-500">Klaowt</span>
-    {', the only social media support '}
+    {', the social media assistant that finds '}
     <br />
-    {'you need to nurture relationships on Bluesky '}
+    {'trending topics from any niche on Bluesky '}
         <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-8 h-8 align-middle" />
   </>
 </h2>
