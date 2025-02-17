@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Layout, LogIn, LogOut, UserSearch, Radio, MessageCircle, BarChart2, Activity, KeyRound, ChevronDown, ChevronUp} from 'lucide-react';
 import { Bookmark } from 'lucide-react';
@@ -26,7 +26,8 @@ import KlaowtReply from './images/KlaowtReply.svg';
 import KlaowtFollow from './images/KlaowtFollow.svg';
 import KlaowtActivity from './images/KlaowtActivity.svg';
 import klaowtIcon from './images/klaowt-in-app-icon.svg';
-
+import mainVideo from './images/landing_page_klaowt_video_medium.mp4';
+import mainVideoCover from './images/landing_page_klaowt_video_cover.png';
 
 function App() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -40,7 +41,8 @@ function App() {
 const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [isGrowModalOpen, setIsGrowModalOpen] = useState(false);
   //const [isAuthenticated, setLoginSuccessHandler] = useAuthStore();
-
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
 // Set up login success handler
   React.useEffect(() => {
     if (setLoginSuccessHandler) {
@@ -50,6 +52,27 @@ const [activeFaq, setActiveFaq] = useState<number | null>(null);
     }
   }, [setLoginSuccessHandler]);
 
+  React.useEffect(() => {
+    const video = videoRef.current;
+    
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handleEnded = () => setIsPlaying(false);
+    
+    if (video) {
+      video.addEventListener('play', handlePlay);
+      video.addEventListener('pause', handlePause);
+      video.addEventListener('ended', handleEnded);
+    }
+    
+    return () => {
+      if (video) {
+        video.removeEventListener('play', handlePlay);
+        video.removeEventListener('pause', handlePause);
+        video.removeEventListener('ended', handleEnded);
+      }
+    };
+  }, []);
 
   // Fetch pinned feeds when feedType changes to 'pinned'
   React.useEffect(() => {
@@ -236,11 +259,19 @@ const faqData = [
             </button>
   {/* Start Hero Image */}
   <div className="max-w-4xl mx-auto">
-    <img 
+  <video ref={videoRef}
+    src={mainVideo}
+    muted
+    playsInline
+    loop
+    controls
+    className="w-full object-cover rounded-lg shadow-2xl mb-5"
+    poste={mainVideoCover}
+    />
+    {/*<img 
       src={KlaowtTrend} 
       alt="Klaowt Analytics Dashboard"
-      className="w-full h-auto rounded-lg shadow-lg"
-    />
+        className="w-full h-auto rounded-lg shadow-lg"*/}
   </div>
         {/*End Hero Image*/}
 
