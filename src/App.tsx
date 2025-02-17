@@ -258,15 +258,15 @@ const faqData = [
               Start for Free 🥳
             </button>
   {/* Start Hero Image */}
-  <div className="max-w-4xl mx-auto">
+  <div className="max-w-3xl mx-auto items-center">
   <video ref={videoRef}
     src={mainVideo}
     muted
     playsInline
     loop
     controls
-    className="w-full object-cover rounded-lg shadow-2xl mb-5"
-    poste={mainVideoCover}
+    className="w-full object-cover rounded-lg shadow-2xl mb-5 mt-5"
+    poster={mainVideoCover}
     />
     {/*<img 
       src={KlaowtTrend} 
