@@ -248,7 +248,7 @@ const faqData = [
             <h1 className="text-6xl pb-3 font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent mb-4">Grow Organic Relationships <br/> Faster on Bluesky
               <br/>     
     </h1> 
-             <p className="text-gray-600 font-md mb-8 text-base">Discover trending posts & engage effortlessly with active profiles in your niche. <br/> Follow relevant creators to build your brand and grow your audience on Bluesky <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-3.5 h-3.5" />  </p>  
+             <p className="text-gray-600 font-md mb-8 text-base">Discover trending posts & engage effortlessly with active profiles in your niche. <br/> Follow big creators to build your brand and grow your audience on Bluesky <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-3.5 h-3.5" />  </p>  
             <button
               onClick={() => setIsLoginModalOpen(true)}
               className="px-6 py-3 bg-gradient-to-r from-blue-400 to-indigo-500 text-white rounded-md hover:bg-blue-600 transition-colors"
@@ -276,11 +276,11 @@ const faqData = [
 {/* Start New Section */}
 <div className="mt-16 text-center">
   <span className="mb-2 bg-blue-50 text-lg border-1 rounded-full text-blue-600 mt-16"> Here's the Problem . . .😓 </span>
-  <h2 className="text-4xl pb-1 font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent">
+  <h2 className="text-4xl pb-1 mt-10 font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent">
     Building a Social Media Audience is hard. 
   </h2>
   {/* Start NoShare Image */}
-  <div className="max-w-4xl mx-auto">
+  <div className="max-w-4xl mx-auto mb-5">
     <img 
       src={KlaowtNoshare} 
       alt="Bluesky Posts No Engagement"
@@ -294,11 +294,11 @@ const faqData = [
       <span className="mb-2 bg-blue-50 text-lg border-1 rounded-full text-gray-700"> We have the Solution . . .🙌 </span>
 <h2 className="text-4xl font-bold mt-10 text-gray-500">
   <>
-    Use{' '}
-    <span className="text-blue-500">Klaowt</span>
-    {', the social media assistant that finds '}
+  {/*Use{' '}*/}
+    <span className="text-[#1185fe]">Klaowt</span>
+    {' helps you find and engage with '}
     <br />
-    {'trending topics from any niche on Bluesky '}
+    {'trending topics to gain visibility on Bluesky '}
         <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-8 h-8 align-middle" />
   </>
 </h2>
@@ -368,7 +368,7 @@ const faqData = [
  {/* Right Column - Text Content */}
     <div className="space-y-6">
       <h3 className="text-2xl font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent text-left">
-        No more doomscrolling, connect with key influencers instantly
+        Connect with big creator accounts and key influencers from any niche in seconds
       </h3>
       <div className="space-y-4">
         <div className="flex items-start space-x-3">
@@ -420,7 +420,7 @@ const faqData = [
           <div>
             <h4 className="font-semibold mb-1 text-left">Relationship Builder</h4>
             <p className="text-gray-600 text-sm text-left">
-              Get more from every post with Klaowt. Connect easily with relevant creators and influencers. Like, comment, and follow interesting accounts before and after sharing your content. Track your activity with the Engagement Meter.
+              Get more from every post with Klaowt. Connect easily with big creators and influencers. Like, comment, and follow interesting accounts before and after sharing your content. Track your activity with the Engagement Meter.
             </p>
           </div>
         </div> 
