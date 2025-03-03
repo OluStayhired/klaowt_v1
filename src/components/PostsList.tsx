@@ -5,6 +5,7 @@ import { PostCard } from './PostCard';
 import { EngagementBar } from './EngagementBar';
 import { Loader2 } from 'lucide-react';
 import { useCustomFeedPosts } from '../hooks/useCustomFeedPosts';
+import { SearchBar } from './SearchBar';
 
 const debugLog = (message: string, data?: any) => {
   console.log(`[Posts List] ${message}`, data ? JSON.stringify(data, null, 2) : '');
@@ -24,6 +25,28 @@ export function PostsList({ feedUri, feedName, feedCategory }: PostsListProps) {
   const [engagedPosts, setEngagedPosts] = useState<Set<string>>(new Set());
   const { agent, user } = useAuthStore();
   const { posts: customPosts, loading: customLoading, error: customError } = useCustomFeedPosts(feedUri);
+      //variables for making search work
+  const [searchQuery, setSearchQuery] = useState('');
+  //const [comments, setComments] = useState<any[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]); // New state
+
+  const handlePostSearch = (query: string) => {
+        setSearchQuery(query);
+        if (!query) {
+            setFilteredPosts(posts); // Reset to original posts if search is cleared
+            return;
+        }
+
+        const filtered = posts.filter(post => {
+            if (!post.record || !post.record.text) return false; // Handle posts without text
+
+            const searchText = post.record.text.toLowerCase();
+            const searchTerms = query.toLowerCase().split(/\s+/);
+            return searchTerms.every(term => searchText.includes(term));
+        });
+
+        setFilteredPosts(filtered);
+    };  
 
   const updatePost = (postUri: string, updates: Partial<Post>) => {
     setPosts(currentPosts => 
@@ -185,7 +208,7 @@ export function PostsList({ feedUri, feedName, feedCategory }: PostsListProps) {
             })
           );
 
-          processedPosts.push(...batchResults.filter((post): post is Post => post !== null));
+    processedPosts.push(...batchResults.filter((post): post is Post => post !== null));
 
           if (mounted) {
             setPosts(current => [...current, ...batchResults.filter((post): post is Post => post !== null)]);
@@ -195,6 +218,8 @@ export function PostsList({ feedUri, feedName, feedCategory }: PostsListProps) {
 
         if (mounted) {
           setError(null);
+          // Initialize filteredPosts with fetched posts
+          setFilteredPosts(processedPosts); // <--- Add this line
         }
       } catch (err: any) {
         console.error('Error fetching posts:', err);
@@ -236,6 +261,7 @@ export function PostsList({ feedUri, feedName, feedCategory }: PostsListProps) {
     );
   }
 
+  {/* old EngagementBar 
   return (
     <div className="space-y-4">
       <EngagementBar 
@@ -256,5 +282,34 @@ export function PostsList({ feedUri, feedName, feedCategory }: PostsListProps) {
         <p className="text-center text-gray-500 py-8">No posts found in this feed.</p>
       )}
     </div>
-  );
+  );*/}
+return (
+        <div className="space-y-4">
+            <div className="bg-white z-10"> 
+                <EngagementBar
+                    totalPosts={posts.length}
+                    engagedPosts={engagedPosts.size}
+                    feedName={feedName}
+                />
+            </div>
+            <div className="text-sm rounded-lg shadow-md text-blue-500 sticky top-0 bg-white z-10"> 
+             
+                <SearchBar placeholder="Search for keywords in this feed" onSearch={handlePostSearch} />
+            </div>
+            {filteredPosts.map((post, index) => (
+                <PostCard
+                    key={`${post.uri}-${post.cid}-${index}`}
+                    post={post}
+                    isEngaged={engagedPosts.has(post.uri)}
+                    onReply={(reply) => addReplyToPost(post.uri, reply)}
+                    onUpdatePost={(updates) => updatePost(post.uri, updates)}
+                />
+            ))}
+            {filteredPosts.length === 0 && (
+                <p className="text-center text-gray-500 py-8">No posts found.</p>
+            )}
+        </div>
+    );
+
+  
 }

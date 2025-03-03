@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../../auth';
-import { Users, UserPlus, Compass, Sparkles, Pin, Send, Activity, Pen, SquarePen, TrendingUp} from 'lucide-react';
+import { Users, UserPlus, UserCheck, UserSearch, Compass, Sparkles, Pin, Send, Activity, Pen, SquarePen, TrendingUp } from 'lucide-react';
+import { Flame } from 'lucide-react';
 import { formatNumber } from '../../utils/formatters';
 import { ActivityTracker } from './ActivityTracker';
 import { CreatePostModal } from './CreatePostModal';
@@ -8,7 +9,7 @@ import { AccordionSection } from './AccordionSection';
 import { GrowAudienceModal } from './GrowAudienceModal';
 
 interface ProfilePanelProps {
-  onFeedTypeChange: (type: 'popular' | 'suggested' | 'create' | 'pinned') => void;
+  onFeedTypeChange: (type: 'popular' | 'suggested' | 'create' | 'pinned' | 'personal') => void;
 }
 
 export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
@@ -16,6 +17,7 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
   const [notification, setNotification] = useState<string | null>(null);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isGrowModalOpen, setIsGrowModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleGrowClick = () => {
     setIsGrowModalOpen(true);
@@ -40,7 +42,7 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
             <div className="mt-2 flex items-center space-x-3">
               <div className="flex items-center space-x-1">
                 <div className="p-1 bg-blue-50 rounded-lg">
-                  <Users className="w-3 h-3 text-blue-500" />
+                  <UserPlus className="w-3 h-3 text-blue-500" />
                 </div>
                 <div>
                   <div className="text-xs font-bold text-gray-900">
@@ -51,7 +53,7 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
               </div>
               <div className="flex items-center space-x-1">
                 <div className="p-1 bg-green-50 rounded-lg">
-                  <UserPlus className="w-3 h-3 text-green-500" />
+                  <UserCheck className="w-3 h-3 text-green-500" />
                 </div>
                 <div>
                   <div className="text-xs font-bold text-gray-900">
@@ -80,9 +82,37 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
       <AccordionSection 
         title="Track Activity" 
         icon={<Activity className="w-4 h-4 text-blue-500" />}
-        defaultExpanded={true}
+        defaultExpanded={false}
       >
         <ActivityTracker />
+      </AccordionSection>
+
+      <AccordionSection 
+        title="Browse Interactions" 
+        icon={<UserSearch className="w-4 h-4 text-blue-500" />}
+        defaultExpanded={false}
+      >
+        <div className="flex flex-wrap gap-2">
+          {/*<button
+            onClick={() => onFeedTypeChange('personal')}
+            className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+          >
+            <Flame className="w-3 h-3 mr-2" />
+            <span className="text-xs">Top User Interactions</span>
+          </button>
+          */}
+          <button
+              onClick={() => onFeedTypeChange('personal')}
+              disabled={loading}
+              className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+>
+              <Flame className="w-3 h-3 mr-2" />
+              <span className="text-xs">
+                   {loading ? 'Loading...' : 'Top User Interactions'}
+              </span>
+          </button>
+
+        </div>
       </AccordionSection>
 
       {/* Browse My Feeds Accordion */}
@@ -99,13 +129,13 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
             <Compass className="w-3 h-3 mr-2" />
             <span className="text-xs">Popular Feeds</span>
           </button>
-          <button
+          {/*<button
             onClick={() => onFeedTypeChange('suggested')}
             className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
           >
             <Sparkles className="w-3 h-3 mr-2" />
             <span className="text-xs">Suggested Feeds</span>
-          </button>
+          </button>*/}
           <button
             onClick={() => onFeedTypeChange('pinned')}
             className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
@@ -117,10 +147,10 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
       </AccordionSection>
    
       {/* New Post Button */}
-      <button 
-        onClick={() => setIsPostModalOpen(true)}
-        className="w-full flex items-center justify-center text-sm font-medium space-x-2 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition-colors mx-auto"
-      >
+<button 
+  onClick={() => setIsPostModalOpen(true)}
+  className="w-full flex items-center justify-center text-sm font-medium space-x-2 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition-colors mx-auto">
+
         <SquarePen className="w-3 h-3" />
         <span>New Post</span>
       </button>

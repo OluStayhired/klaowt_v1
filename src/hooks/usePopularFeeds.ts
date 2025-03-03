@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuthStore } from '../auth';
 import { Feed } from '../types/feed';
 
@@ -90,8 +90,11 @@ const getCachedFeeds = () => {
   return null;
 };
     
-  // Fetch feeds and categorize them
-  const fetchFeeds = async () => {
+  // Fetch feeds and categorize them added callback
+  //const fetchFeeds = async () => {
+   const fetchFeeds = useCallback(async () => {
+     if (!agent) return;
+     
     try {
 
           // Check cache first
@@ -161,8 +164,87 @@ feed.uri === 'at://did:plc:wzsilnxf24ehtmmc3gssy5bu/app.bsky.feed.generator/ment
       } finally {
       setLoading(false);
       }
-  };
+  }, [agent]);
 
+   const refetchFeeds = useCallback(async () => {
+     if (!agent) return;
+     
+    try {
+
+          // Check cache first
+          const cachedData = getCachedFeeds();
+          if (cachedData) 
+          {
+          setFeeds(cachedData);
+          return;
+          }
+
+          // Check rate limit before making request
+          checkRateLimit();
+      const response = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+        limit: 50,
+      });
+
+          // Cache the response
+          feedCache['popular'] = {
+          data: response.data.feeds,
+          timestamp: Date.now()
+          };
+
+  // Organize feeds by category/type
+  const categorizedFeeds = {
+  mutuals: response.data.feeds.find(feed => {
+    const lowerName = (feed?.displayName || 'Unknown Feed').toLowerCase();
+    const lowerDesc = (feed.description || '').toLowerCase();
+    return (feed.uri.includes('app.bsky.feed.generator/mutuals') || feed.uri === 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/mutuals'
+    );
+  }),
+  quiets: response.data.feeds.find(feed => {
+    const lowerName = (feed?.displayName || 'Unknown Feed').toLowerCase();
+    const lowerDesc = (feed?.description || '').toLowerCase();
+
+    return (feed.uri.includes('app.bsky.feed.generator/infreq') || feed.uri === 'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/infreq'
+    );
+  }),
+  popular: response.data.feeds.find(feed => {
+    const lowerName = (feed?.displayName || 'Unknown Feed').toLowerCase();
+    const lowerDesc = (feed?.description || '').toLowerCase();
+    return (feed.uri.includes('app.bsky.feed.generator/with-friends') || feed.uri === 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends'
+    );
+  }),
+ mentions: response.data.feeds.find(feed => {
+    const lowerName = (feed?.displayName || 'Unknown Feed').toLowerCase();
+    const lowerDesc = (feed?.description || '').toLowerCase();
+    return (feed.uri.includes('app.bsky.feed.generator/mentions') || 
+feed.uri === 'at://did:plc:wzsilnxf24ehtmmc3gssy5bu/app.bsky.feed.generator/mentions'
+    );
+  }),
+
+  // ... other feed categories
+};
+
+     setFeeds(categorizedFeeds);
+      } catch (err) {
+        if (err.message === 'Rate limit exceeded') {
+          // Use cached data if available when rate limited
+          const cachedData = getCachedFeeds();
+          if (cachedData) {
+          setFeeds(cachedData);
+          return;
+          }
+      }
+          setError('Failed to refetch feeds');
+          console.error(err);
+      } finally {
+      setLoading(false);
+      }
+  }, [agent]);
+
+  useEffect(() => {
+        fetchFeeds();
+    }, [fetchFeeds]);
+
+ 
   const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const fetchWithRetry = async (retries = 3, backoff = 1000) => {
@@ -175,6 +257,7 @@ const fetchWithRetry = async (retries = 3, backoff = 1000) => {
   }
 };
 
-
-  return { feeds, loading, error, refetchFeeds: fetchFeeds };
+return { feeds, loading, error, refetchFeeds };
+  
+  //return { feeds, loading, error, refetchFeeds: fetchFeeds };
 }

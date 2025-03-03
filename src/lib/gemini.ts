@@ -7,11 +7,16 @@ if (!apiKey) {
   console.error('Missing Gemini API key in environment variables');
 }
 
-// Initialize the Gemini API
-const genAI = new GoogleGenerativeAI(apiKey || '');
+// Initialize with proper API version
+const genAI = new GoogleGenerativeAI(apiKey || '', {
+  apiVersion: 'v1beta' // Add explicit API version
+});
 
-// Create a reusable model instance
-const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+// Create a reusable model instance with correct model name
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+
+// Rest of the file remains the same...
+
 
 export interface GeminiResponse {
   text: string;

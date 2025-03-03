@@ -638,7 +638,11 @@ const renderPlanContent = () => (
         Posts
       </button>
     </div>
+
+
+    <div className="text-sm rounded-lg shadow-md text-blue-500 sticky top-0 bg-white z-10"> 
                 <SearchBar placeholder="Search for my recent posts " onSearch={handleSearch} />
+    </div>                
                 
                 {/*End add Categories*/}
                 {comments.map((comment) => (

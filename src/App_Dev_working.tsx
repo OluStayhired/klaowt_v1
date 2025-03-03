@@ -45,7 +45,7 @@ function App() {
   const [pinnedFeedUris, setPinnedFeedUris] = useState<Set<string>>(new Set());
 const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [isGrowModalOpen, setIsGrowModalOpen] = useState(false);
-  const videoRef = React.useRef<HTMLVideoElement>(null);
+
   // Inside the App component add User states
 const { users, loading: usersLoading, error: usersError } = useUsers();
 const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -237,10 +237,12 @@ const [selectedUser, setSelectedUser] = useState<User | null>(null);
       <main className="max-w-7xl max-h-7xl mx-auto px-4 py-12">
         {!isAuthenticated ? (
           <div className="text-center py-12">
-            <h1 className="text-6xl pb-3 font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent mb-4">Grow Organic Relationships <br/> Faster on Bluesky
-              <br/>     
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent mb-4">Grow Organic Relationships <br/> Faster on Bluesky
+              <br/> 
+              {/*<span className="text-5xl mt-2">with just 30 mins a day</span>*/}
     </h1> 
-             <p className="text-gray-600 font-md mb-8 text-base">Discover trending posts & engage effortlessly with active profiles in your niche. <br/> Follow big creators to build your brand and grow your audience on Bluesky <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-3.5 h-3.5" />  </p>  
+            {/*<p className="text-gray-600 font-md mb-8 text-lg">Stop wasting time doomscrolling, comment faster on relevant posts to boost your visibility and grow your audience. </p>*/}
+             <p className="text-gray-600 font-md mb-8 text-base">Discover trending posts & engage effortlessly with active profiles in your niche. <br/> Follow relevant creators to build your brand and grow your audience on Bluesky <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-3.5 h-3.5" />  </p>  
             <button
               onClick={() => setIsLoginModalOpen(true)}
               className="px-6 py-3 bg-gradient-to-r from-blue-400 to-indigo-500 text-white rounded-md hover:bg-blue-600 transition-colors"
@@ -248,31 +250,20 @@ const [selectedUser, setSelectedUser] = useState<User | null>(null);
               Start for Free 🥳
             </button>
   {/* Start Hero Image */}
-  {/*<div className="max-w-4xl mx-auto">
+  <div className="max-w-4xl mx-auto">
     <img 
       src={KlaowtTrend} 
       alt="Klaowt Analytics Dashboard"
       className="w-full h-auto rounded-lg shadow-lg"
     />
-        </div>*/}
-     <div className="max-w-3xl mx-auto items-center">
-        <video ref={videoRef}
-          src={mainVideo}
-          muted
-          playsInline
-          loop
-          controls
-          className="w-full object-cover rounded-lg shadow-2xl mb-5 mt-5"
-          poster={mainVideoCover}
-          />
-      </div>
+  </div>
         {/*End Hero Image*/}
 
 {/* Start New Section */}
 <div className="mt-16 text-center">
   <span className="mb-2 bg-blue-50 text-lg border-1 rounded-full text-blue-600 mt-16"> Here's the Problem . . .😓 </span>
-  <h2 className="text-4xl pb-1 mt-10 font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent">
-    Building a Social Media Audience is hard. 
+  <h2 className="text-4xl font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent">
+    Building a Bluesky Audience <br/> from Scratch is hard. 
   </h2>
   {/* Start NoShare Image */}
   <div className="max-w-4xl mx-auto">
@@ -289,11 +280,11 @@ const [selectedUser, setSelectedUser] = useState<User | null>(null);
       <span className="mb-2 bg-blue-50 text-lg border-1 rounded-full text-gray-700"> We have the Solution . . .🙌 </span>
 <h2 className="text-4xl font-bold mt-10 text-gray-500">
   <>
-  {/*Use{' '}*/}
-    <span className="text-[#1185fe]">Klaowt</span>
-    {' helps you find and engage with '}
+    Discover{' '}
+    <span className="text-blue-500">Klaowt</span>
+    {', the only social media support '}
     <br />
-    {'trending topics to gain visibility on Bluesky '}
+    {'you need to nurture relationships on Bluesky '}
         <img src={BlueskyLogo} alt="Bluesky" className="inline-block w-8 h-8 align-middle" />
   </>
 </h2>
@@ -363,7 +354,7 @@ const [selectedUser, setSelectedUser] = useState<User | null>(null);
  {/* Right Column - Text Content */}
     <div className="space-y-6">
       <h3 className="text-2xl font-bold bg-gradient-to-r from-black via-blue-500 to-indigo-500 bg-clip-text text-transparent text-left">
-        Connect with big creator accounts and key influencers from any niche in seconds
+        No more doomscrolling, connect with key influencers instantly
       </h3>
       <div className="space-y-4">
         <div className="flex items-start space-x-3">
@@ -415,7 +406,7 @@ const [selectedUser, setSelectedUser] = useState<User | null>(null);
           <div>
             <h4 className="font-semibold mb-1 text-left">Relationship Builder</h4>
             <p className="text-gray-600 text-sm text-left">
-              Get more from every post with Klaowt. Connect easily with big creators and influencers. Like, comment, and follow interesting accounts before and after sharing your content. Track your activity with the Engagement Meter.
+              Get more from every post with Klaowt. Connect easily with relevant creators and influencers. Like, comment, and follow interesting accounts before and after sharing your content. Track your activity with the Engagement Meter.
             </p>
           </div>
         </div> 
