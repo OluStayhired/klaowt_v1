@@ -435,7 +435,7 @@ return (
         },
         {
             icon: <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />,
-            label: "Reposted: Reposted your post",
+            label: "Reposted: Reposted their post",
             bgColor: "bg-green-100",
             textColor: "text-green-500",
         },
