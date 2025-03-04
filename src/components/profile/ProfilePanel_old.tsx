@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../../auth';
-import { Users, UserPlus, UserCheck, UserSearch, Compass, Sparkles, Pin, Send, Activity, Pen, SquarePen, TrendingUp, Clock } from 'lucide-react';
+import { Users, UserPlus, UserCheck, UserSearch, Compass, Sparkles, Pin, Send, Activity, Pen, SquarePen, TrendingUp } from 'lucide-react';
 import { Flame } from 'lucide-react';
-import { Target } from 'lucide-react';
 import { formatNumber } from '../../utils/formatters';
 import { ActivityTracker } from './ActivityTracker';
 import { CreatePostModal } from './CreatePostModal';
 import { AccordionSection } from './AccordionSection';
 import { GrowAudienceModal } from './GrowAudienceModal';
-import { PeakTimeModal } from './PeakTimeModal';
 
 interface ProfilePanelProps {
   onFeedTypeChange: (type: 'popular' | 'suggested' | 'create' | 'pinned' | 'personal') => void;
@@ -19,15 +17,10 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
   const [notification, setNotification] = useState<string | null>(null);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isGrowModalOpen, setIsGrowModalOpen] = useState(false);
-  const [isPeakModalOpen, setIsPeakModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleGrowClick = () => {
     setIsGrowModalOpen(true);
-  };
-
-  const handlePeakTimeClick = () => {
-    setIsPeakModalOpen(true);
   };
 
   if (!user) return null;
@@ -78,8 +71,8 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
               onClick={handleGrowClick}
               className="flex-1 flex items-center justify-center text-xs font-normal space-x-1 px-2 py-3 bg-gray-800 text-white hover:bg-gray-700 rounded transition-colors mt-8"
             >
-              <Target className="w-4 h-4" />
-              <span>Start Focused Mode</span>
+              <TrendingUp className="w-4 h-4" />
+              <span>Grow with Klaowt</span>
             </button>
           </div>
         </div>
@@ -153,27 +146,14 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
         </div>
       </AccordionSection>
    
-  
- {/* Buttons Container */}
-  <div className="flex gap-2"> {/* Flex container with gap */}
-       {/* New Post Button */}
-          <button
-              onClick={() => setIsPostModalOpen(true)}
-              className="flex-1 flex items-center justify-center text-xs font-normal space-x-2 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition-colors"
-                >
-               <SquarePen className="w-3 h-3" />
-               <span>New Post</span>
-           </button>
+      {/* New Post Button */}
+<button 
+  onClick={() => setIsPostModalOpen(true)}
+  className="w-full flex items-center justify-center text-sm font-medium space-x-2 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition-colors mx-auto">
 
-                {/* Best Posting Times Button */}
-           <button
-               onClick={() => setIsPeakModalOpen(true)}
-               className="flex-1 flex items-center justify-center text-xs font-normal space-x-2 px-4 py-2 bg-gray-800 text-white hover:bg-gray-700 rounded transition-colors"
-                >
-               <Clock className="w-3 h-3" />
-               <span>Peak Times</span>
-           </button>
-            </div>
+        <SquarePen className="w-3 h-3" />
+        <span>New Post</span>
+      </button>
       
       <CreatePostModal 
         isOpen={isPostModalOpen}
@@ -183,11 +163,6 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
       <GrowAudienceModal 
         isOpen={isGrowModalOpen}
         onClose={() => setIsGrowModalOpen(false)}
-      />
-
-      <PeakTimeModal
-        isOpen={isPeakModalOpen}
-        onClose={() => setIsPeakModalOpen(false)}
       />
     </div>
   );

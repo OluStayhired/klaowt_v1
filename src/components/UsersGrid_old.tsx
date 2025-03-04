@@ -1,7 +1,7 @@
 
 // Update the onClick handler in UsersGrid.tsx to show the UserAnalyticsSidebar
 import React, { useState, useEffect } from 'react';
-import { Users, AlertCircle, CheckCircle2, UserPlus, UsersRound, UserCheck, Handshake, ArrowUpDown, Filter, Repeat } from 'lucide-react';
+import { Users, AlertCircle, CheckCircle2, UserPlus, UsersRound, UserCheck, Handshake, ArrowUpDown, Filter, Repeat, RefreshCw } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
 import { User } from '../types/user';
 import { UserCard } from './users/UserCard';
@@ -382,8 +382,8 @@ return (
   selectedUser ? 'ml-[480px]' : 'mr-[0px]'}`}>*/}
       
       {/*Start Existing grid content */}
- <div className="space-y-6">
-      <UsersSearchBar onSearch={setSearchQuery} />
+ <div className="text-sm text-gray-500 sticky top-0 space-y-6">
+      <UsersSearchBar placeholder="Search for users by name, bio or handle " onSearch={setSearchQuery} />
       
       {/* Categories */}
       <div className="flex items-center space-x-4 mb-6">
@@ -411,7 +411,47 @@ return (
         
     </div>
 
+   {/* Start Legend */}
+<div className="flex flex-wrap gap-4 p-4">
+    {/* Legend Items */}
+    {[
+        {
+            icon: <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />,
+            label: "Engaged: Liked AND Commented",
+            bgColor: "bg-blue-100",
+            textColor: "text-blue-500",
+        },
+        {
+            icon: <AlertCircle className="w-3.5 h-3.5 text-red-400" />,
+            label: "Not Engaged: No interactions",
+            bgColor: "bg-red-100",
+            textColor: "text-red-400",
+        },
+        {
+            icon: <AlertCircle className="w-3.5 h-3.5 text-yellow-600" />,
+            label: "Partial: Liked OR Commented",
+            bgColor: "bg-yellow-100",
+            textColor: "text-yellow-600",
+        },
+        {
+            icon: <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />,
+            label: "Reposted: Reposted their post",
+            bgColor: "bg-green-100",
+            textColor: "text-green-500",
+        },
+    ].map((item, index) => (
+        <div
+            key={index}
+            className={`flex items-center space-x-2 p-2 rounded-lg ${item.bgColor} hover:shadow-sm transition-all transform hover:-translate-y-0.5 cursor-pointer`}
+        >
+            {item.icon}
+            <span className={`text-xs ${item.textColor}`}>{item.label}</span>
+        </div>
+    ))}
+</div>
+{/* End Legend */}
    {/*start legend*/}
+   {/*}
        <div className="flex items-center space-x-4">
           <div className="p-2 flex ml-4 items-center bg-blue-100 rounded-lg space-x-0.5 p-4 hover:shadow-sm transition-all transform hover:-translate-y-0.5 relative cursor-pointer"
                 title="You have Liked AND Commented on their last post"
@@ -441,10 +481,75 @@ return (
               <CheckCircle2 className={"w-3.5 h-3.5 text-green-500"} />
               <span className="text-xs text-green-500 ml-1">Reposted</span>
           </div>
-       </div>      
+       </div>    */}  
    {/*end legend*/}
 
-      {/* Sorting and Filtering Controls */}
+  
+
+{/* Sorting and Filtering Controls */}
+<div className="flex flex-col space-y-4 p-4 rounded-lg">
+    <div className="flex flex-wrap items-center text-blue-500"> {/* Removed justify-between */}
+        <div className="flex items-center space-x-4">
+            {/* Sorting Options */}
+            <div className="flex items-center space-x-2">
+                <ArrowUpDown className="w-4 h-4" />
+                <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as SortOption)}
+                    className="text-sm border-none bg-transparent focus:ring-0"
+                >
+                    {sortOptions.map(option => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+                <button
+                    onClick={() => setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')}
+                    className="p-1 hover:bg-gray-200 rounded"
+                >
+                    {sortDirection === 'asc' ? '↑' : '↓'}
+                </button>
+            </div>
+
+            {/* Filtering Options */}
+            <div className="flex items-center space-x-2 bg-blue-75 rounded">
+                <Filter className="w-4 h-4" />
+                <select
+                    value={interactionFilter}
+                    onChange={(e) => setInteractionFilter(e.target.value as InteractionFilter)}
+                    className="text-sm border-none bg-transparent focus:ring-0"
+                >
+                    {interactionOptions.map(option => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {/* Users Found Count and Icon */}
+            <div className="flex items-center space-x-1">
+                <span className="text-sm">{filteredAndSortedUsers.length} users found</span>
+                <Users className="w-4 h-4" /> {/* Add Users Icon */}
+            </div>
+        </div>
+    </div>
+
+    {/* Refresh Button Row */}
+    <div className="flex justify-start">
+        <button
+            onClick={handleUserRefresh}
+            disabled={loading}
+            className="p-2 text-white bg-blue-500 hover:bg-blue-600 rounded flex items-center space-x-2"
+        >
+            <RefreshCw className="w-3 h-3" />
+            <span className="text-sm">{loading ? 'Refreshing...' : 'Refresh Interactions'}</span>
+        </button>
+    </div>
+</div>  
+   
+      {/*
   <div className="flex items-center text-blue-500 justify-between  p-4 rounded-lg">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
@@ -483,6 +588,7 @@ return (
             </select>
           </div>
           {/*Add a Refresh Button here*/}
+      {/*
             <div className="flex items-center space-x-2 bg-blue-75 rounded">
             <button 
                 onClick={handleUserRefresh}
@@ -503,6 +609,7 @@ return (
         </div>
     
       </div>
+   */}
 
       {/* Users Grid 
           <div className={`grid ${

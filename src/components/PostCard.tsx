@@ -20,7 +20,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, isEngaged = false, onReply, onUpdatePost }: PostCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
   const [isReply, setIsReply] = useState(post.isReply || false); //isRoot post is a reply
   const [likeCount, setLikeCount] = useState(post.likeCount);
@@ -44,10 +44,12 @@ const [rootReplyText, setRootReplyText] = useState('');
 const [linkPreviews, setLinkPreviews] = useState<React.ReactNode[]>([]);
 // Add at the top with other state variables
 const [isRootReplying, setIsRootReplying] = useState(false);
+const [replyCount, setReplyCount] = useState(post.replyCount);  
 
 
 const [isFollowingRootAuthor, setIsFollowingRootAuthor] = useState(false);
 const [rootFollowUri, setRootFollowUri] = useState<string | null>(null);
+const [localReplies, setLocalReplies] = useState(post.replies || []);
 
 // At component level, outside both functions
 const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -386,54 +388,79 @@ const handleRootFollow = async () => {
   };
 // start handle reply
   const handleReply = async () => {
-    if (!agent || !replyText.trim() || !user || replyText.length > MAX_CHARS) return;
-    
-    try {  
-    // Create basic facets for URLs
-    const facets = createUrlFacets(replyText);
-
-    // Create post with rich text
-      const response = await agent.post({
-        text: replyText,
-        facets: facets.length > 0 ? facets : undefined,
-        reply: {
-          root: { uri: post.uri, cid: post.cid },
-          parent: { uri: post.uri, cid: post.cid }
-        }
-      });
-
-      //const response = await agent.getPost({ uri: post.record.embed.record.uri });
-      
-//console.log("Post Card:", post) //identify postcard
-     
-      // Create an immediate reply post object
-      const newReply: Post = {
-        uri: response.uri,
-        cid: response.cid,
-        author: {
-          did: user.did,
-          handle: user.handle,
-          displayName: user.displayName,
-          avatar: user.avatar,
-        } ,
-        record: {
-          text: replyText,
-          createdAt: new Date().toISOString(),
-        },
-        replyCount: 0,
-        repostCount: 0,
-        likeCount: 0,
-        indexedAt: new Date().toISOString(),
-      };
-
-      // Update the parent post's reply count and add the new reply
-      onReply(newReply);
-      setReplyText('');
-      setIsReplying(false);
-    } catch (err) {
-      console.error('Error posting reply:', err);
-    }
+  if (!agent || !replyText.trim() || !user || replyText.length > MAX_CHARS) return;
+  
+  // Create optimistic reply first
+  const optimisticReply = {
+    uri: `temp-${Date.now()}`, // Temporary URI
+    cid: `temp-${Date.now()}`, // Temporary CID
+    author: {
+      did: user.did,
+      handle: user.handle,
+      displayName: user.displayName,
+      avatar: user.avatar,
+    },
+    record: {
+      text: replyText,
+      createdAt: new Date().toISOString(),
+    },
+    replyCount: 0,
+    repostCount: 0,
+    likeCount: 0,
+    indexedAt: new Date().toISOString(),
   };
+
+  // Update UI immediately
+  //onUpdatePost({
+   // replyCount: post.replyCount + 1,
+   // replies: [...(post.replies || []), optimisticReply]
+  //});
+
+  setLocalReplies(prev => [...prev, optimisticReply]);
+  setReplyCount(prev => prev + 1);
+  setShowReplies(true);   
+  
+  try {
+    // Make API call
+    const facets = createUrlFacets(replyText);
+    const response = await agent.post({
+      text: replyText,
+      facets: facets.length > 0 ? facets : undefined,
+      reply: {
+        root: { uri: post.uri, cid: post.cid },
+        parent: { uri: post.uri, cid: post.cid }
+      }
+    });
+
+    // Update with real data
+    const realReply = {
+      ...optimisticReply,
+      uri: response.uri,
+      cid: response.cid
+    };
+
+    setLocalReplies(prev => 
+      prev.map(reply => 
+        reply.uri === optimisticReply.uri ? realReply : reply
+      )
+    );
+    
+    
+    // Cleanup after successful post
+        onReply(realReply);
+        setReplyText('');
+        setIsReplying(false);
+
+  } catch (err) {
+// Revert optimistic update on error
+setLocalReplies(prev => 
+      prev.filter(reply => reply.uri !== optimisticReply.uri)
+    );
+setReplyCount(prev => prev - 1);
+    console.error('Error posting reply:', err);
+  }
+};
+
 // end handle reply
 
     
@@ -748,7 +775,8 @@ post.record.embed.images.length === 4 ? '1/1' : '1/1', objectFit: 'cover' }}
            
           </div>      
           {/* Replies Section */}
-         {post.replies && post.replies.length > 0 && (
+          {/*{post.replies && post.replies.length > 0 && (*/}
+          {localReplies.length > 0 && (
             <div className="mt-2">
               <button
                 onClick={() => setShowReplies(!showReplies)}
@@ -768,7 +796,7 @@ post.record.embed.images.length === 4 ? '1/1' : '1/1', objectFit: 'cover' }}
               </button>
               {showReplies && (
                 <div className="mt-2 space-y-2">
-                  {post.replies.map((reply) => (
+                  {localReplies.map((reply) => (
                     <div key={reply.uri} className="flex items-start space-x-2 pl-4 border-l-2 border-gray-100">
                       <img
                         src={reply.author.avatar || 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop'}
