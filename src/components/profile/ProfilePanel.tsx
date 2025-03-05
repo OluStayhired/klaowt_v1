@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../../auth';
-import { Users, UserPlus, UserCheck, UserSearch, Compass, Sparkles, Pin, Send, Activity, Pen, SquarePen, TrendingUp, Clock } from 'lucide-react';
+import { Users, UserPlus, UserCheck, UserSearch, Compass, Sparkles, Pin, Send, Activity, Pen, SquarePen, TrendingUp, Clock, Heart } from 'lucide-react';
 import { Flame } from 'lucide-react';
 import { Target } from 'lucide-react';
 import { formatNumber } from '../../utils/formatters';
@@ -95,7 +95,7 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
       </AccordionSection>
 
       <AccordionSection 
-        title="Browse Interactions" 
+        title="Discover Friends" 
         icon={<UserSearch className="w-4 h-4 text-blue-500" />}
         defaultExpanded={false}
       >
@@ -113,9 +113,9 @@ export default function ProfilePanel({ onFeedTypeChange }: ProfilePanelProps) {
               disabled={loading}
               className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
 >
-              <Flame className="w-3 h-3 mr-2" />
+              <Heart className="w-3 h-3 mr-2" />
               <span className="text-xs">
-                   {loading ? 'Loading...' : 'Top User Interactions'}
+                   {loading ? 'Loading...' : 'Browse Top Friends'}
               </span>
           </button>
 

@@ -1,7 +1,7 @@
 
 // Update the onClick handler in UsersGrid.tsx to show the UserAnalyticsSidebar
 import React, { useState, useEffect } from 'react';
-import { Users, AlertCircle, CheckCircle2, UserPlus, UsersRound, UserCheck, Handshake, ArrowUpDown, Filter, Repeat, RefreshCw } from 'lucide-react';
+import { Users, AlertCircle, CheckCircle2, UserPlus, UsersRound, UserCheck, Handshake, ArrowUpDown, Filter, Repeat, RefreshCw, Clock } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
 import { User } from '../types/user';
 import { UserCard } from './users/UserCard';
@@ -11,7 +11,9 @@ import { usePinnedUsers } from '../hooks/usePinnedUsers';
 import { useUsers } from '../hooks/useUsers';
 import { useDebounce } from '../hooks/useDebounce';
 import { UserAnalyticsSidebar } from './UserAnalyticsSidebar';
+//import { LoadingSpinner } from 'lucide-react';
 
+import { useActivityHours } from '../hooks/useActivityHours';
 
 interface UsersGridProps {
   users: User[];
@@ -19,6 +21,18 @@ interface UsersGridProps {
   onUserClick?: (user: User) => void;
   loading?: boolean; // Add this if needed
 }
+
+interface ActivityHourData {
+  hour: number;
+  count: number;
+  percentage: number;
+}
+
+interface ActivityStats {
+  topHours: ActivityHourData[];
+  totalInteractions: number;
+}
+
 
 type SortOption = 'engagement' | 'followers' | 'following' | 'recent';
 type InteractionFilter = 'all' | 'unengaged' | 'engaged' | 'high-engagement';
@@ -40,7 +54,28 @@ const { users: hookUsers, loading: usersLoading, error } = useUsers();
 const [hoveredIndex, setHoveredIndex] = useState(null);
 const [localUsers, setLocalUsers] = useState<User[]>(users); //for local updates
 const [loading, setLoading] = useState(false);
+const [showActivityHours, setShowActivityHours] = useState(false);  
+const [activityLoading, setActivityLoading] = useState(false);
+const [activityError, setActivityError] = useState<string | null>(null);
+//const { activityStats } = useActivityHours();
+//const { activityStats, loading: activityLoading, error: activityError } = useActivityHours();
 
+// Separate state declarations for each piece of data
+const [activityStats, setActivityStats] = useState<{
+  topHours: Array<{
+    hour: number;
+    minutes: number;
+    count: number;
+    percentage: number;
+  }>;
+  totalInteractions: number;
+}>({
+  topHours: [],
+  totalInteractions: 0
+});  
+
+
+  
   useEffect(() => {
   console.log('Selected user changed:', selectedUser);
 }, [selectedUser]);
@@ -75,6 +110,153 @@ useEffect(() => {
   }
 }, [selectedUser]);  
 
+{/*Start Activity Hours*/}    
+//if (loading) return (
+//  <div className="flex justify-center items-center py-8">
+//    <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
+//  </div>
+//);
+
+// Format hours in 12-hour format with am/pm
+  {/*const formatHour = (hour: number) => {
+  const ampm = hour >= 12 ? 'pm' : 'am';
+  const h = hour % 12 || 12;
+  return `${h}${ampm}`;
+};  */}
+
+const formatHour = (hour: number, minutes: number = 0) => {
+  const ampm = hour >= 12 ? 'pm' : 'am';
+  const h = hour % 12 || 12;
+  return `${h}:${minutes.toString().padStart(2, '0')}${ampm}`;
+};
+  
+
+const roundToNearest30Minutes = (hour: number) => {
+  // Convert hour to minutes
+  const totalMinutes = hour * 60;
+  // Round down to nearest 30
+  //const roundedMinutes = Math.floor(totalMinutes / 30) * 30;
+  const roundedMinutes = Math.floor(totalMinutes / 10) * 10;  
+  // Convert back to decimal hours
+  //return roundedMinutes / 60;
+  return parseFloat((roundedMinutes / 60).toFixed(2)); // Round to 2 decimal places  
+};
+
+
+
+const handlePeakHours = async () => {
+  if (!agent || !user) return;
+
+  try {
+    //setLoading(true);
+    setActivityLoading(true);
+    
+    // Initialize activity tracking
+    const hourlyActivity = new Map<number, number>();
+    for (let i = 0; i < 24; i++) {
+      hourlyActivity.set(i, 0);
+    }
+
+    // Get user's timeline with batching
+    const timeline = await agent.getAuthorFeed({
+      actor: user.handle,
+      limit: 100
+    });
+
+    // Process posts in batches of 10 for better performance
+    const batchSize = 20;
+    const posts = timeline.data.feed;
+    
+    for (let i = 0; i < posts.length; i += batchSize) {
+      const batch = posts.slice(i, i + batchSize);
+      
+      // Process batch in parallel
+      await Promise.all(batch.map(async (item) => {
+        const post = item.post;
+        
+        // Get interactions in parallel
+        const [likes, thread] = await Promise.all([
+          agent.getLikes({ uri: post.uri }),
+          agent.getPostThread({ uri: post.uri, depth: 1 })
+        ]);
+
+        // Process likes
+        likes.data.likes.forEach(like => {
+          const hour = new Date(like.createdAt).getHours();
+          hourlyActivity.set(hour, (hourlyActivity.get(hour) || 0) + 1);
+        });
+
+        // Process comments
+        thread.data.thread.replies?.forEach(reply => {
+          const hour = new Date(reply.post.indexedAt).getHours();
+          hourlyActivity.set(hour, (hourlyActivity.get(hour) || 0) + 1);
+        });
+      }));
+    }
+
+    // Calculate total interactions
+    const totalInteractions = Array.from(hourlyActivity.values())
+      .reduce((sum, count) => sum + count, 0);
+
+    // Get top 3 hours sorted by activity
+    {/*const sortedHours = Array.from(hourlyActivity.entries())
+      .map(([hour, count]) => ({
+        hour,
+        count,
+        percentage: (count / totalInteractions) * 100
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3);*/}
+
+    // Inside handlePeakHours function:
+const sortedHours = Array.from(hourlyActivity.entries())
+  .map(([hour, count]) => {
+    // Round the hour down to nearest 30 minutes
+    const roundedHour = roundToNearest30Minutes(hour);
+    
+    // Split into hour and minutes
+    const wholeHour = Math.floor(roundedHour);
+    const minutes = Math.round((roundedHour - wholeHour) * 60);
+    
+    return {
+      hour: wholeHour,
+      minutes: minutes,
+      count,
+      percentage: (count / totalInteractions) * 100
+    };
+  })
+  .sort((a, b) => b.count - a.count)
+  .slice(0, 3);
+
+
+    // Update state
+    setActivityStats({
+      topHours: sortedHours,
+      totalInteractions
+    });
+    setShowActivityHours(true);
+
+    // Show success notification
+    setNotification({
+      message: 'Peak hours data loaded successfully',
+      type: 'success'
+    });
+
+  } catch (err) {
+    console.error('Error loading peak hours:', err);
+    setNotification({
+      message: 'Failed to load peak hours data',
+      type: 'error'
+    });
+  } finally {
+    setActivityLoading(false);
+  }
+};
+
+  
+
+  {/*End Activity Hours*/}  
+  
 // start handleInteractions update (for local updates)
 const handleInteractionUpdate = (userDid: string, updates: {
         liked: boolean;
@@ -127,54 +309,6 @@ const handleInteractionUpdate = (userDid: string, updates: {
     { value: 'engaged', label: 'Engaged' },
     { value: 'high-engagement', label: 'High Engagement' },
   ];
-
-  {/*
-  const filteredAndSortedUsers = React.useMemo(() => {
-    return users
-      .filter(user => {
-        // Category filter
-        if (selectedCategory !== 'All') {
-          if (!user.category?.includes(selectedCategory)) return false;
-        }
-
-        // Search filter
-        if (debouncedSearchQuery) {
-          const searchText = `${user.displayName || ''} ${user.handle} ${user.description || ''}`.toLowerCase();
-          if (!debouncedSearchQuery.toLowerCase().split(' ').every(term => searchText.includes(term))) {
-            return false;
-          }
-        }
-
-        // Interaction filter
-        switch (interactionFilter) {
-          case 'unengaged':
-            return !user.myInteractions.liked && !user.myInteractions.commented && !user.myInteractions.reposted;
-          case 'engaged':
-            return user.myInteractions.liked || user.myInteractions.commented || user.myInteractions.reposted;
-          case 'high-engagement':
-            return (user.myInteractions.liked && user.myInteractions.commented) || user.myInteractions.reposted;
-          default:
-            return true;
-        }
-      })
-      .sort((a, b) => {
-        const direction = sortDirection === 'desc' ? -1 : 1;
-        
-        switch (sortBy) {
-          case 'engagement':
-            return (b.engagementScore - a.engagementScore) * direction;
-          case 'followers':
-            return (b.followersCount - a.followersCount) * direction;
-          case 'following':
-            return (b.followsCount - a.followsCount) * direction;
-          case 'recent':
-            return ((b.interactions.total || 0) - (a.interactions.total || 0)) * direction;
-          default:
-            return 0;
-        }
-      });
-  }, [users, selectedCategory, debouncedSearchQuery, interactionFilter, sortBy, sortDirection]);
-  */}
 
   {/*Version of filteredAndSortedUsers to allow optimistic updates*/}
   const filteredAndSortedUsers = React.useMemo(() => {
@@ -450,42 +584,45 @@ return (
     ))}
 </div>
 {/* End Legend */}
-   {/*start legend*/}
-   {/*}
-       <div className="flex items-center space-x-4">
-          <div className="p-2 flex ml-4 items-center bg-blue-100 rounded-lg space-x-0.5 p-4 hover:shadow-sm transition-all transform hover:-translate-y-0.5 relative cursor-pointer"
-                title="You have Liked AND Commented on their last post"
-                style={{ whiteSpace: 'pre-line' }}
-            >
-              <CheckCircle2 className={"w-3.5 h-3.5 text-blue-500"} />
-              <span className="text-xs text-blue-500 ml-1">Engaged</span>
-            </div>
-         <div className="p-2 flex ml-4 items-center bg-red-100 rounded-lg space-x-0.5  p-4 hover:shadow-sm transition-all transform hover:-translate-y-0.5 relative cursor-pointer border border-red-100"
-                title="You have NOT interacted with their last post"
-                style={{ whiteSpace: 'pre-line' }}
-           >
-              <AlertCircle className={"w-3.5 h-3.5 text-red-400"} />
-              <span className="text-xs text-red-400 ml-1">Not Engaged</span>
-        </div>
-         <div className="p-2 flex ml-4 items-center bg-yellow-100 rounded-lg space-x-0.5  p-4 hover:shadow-sm transition-all transform hover:-translate-y-0.5 relative cursor-pointer"
-                title="You have EITHER Liked OR Commented on their last post"
-                style={{ whiteSpace: 'pre-line' }}
-           >
-              <AlertCircle className={"w-3.5 h-3.5 text-yellow-600"} />
-              <span className="text-xs text-yellow-600 ml-1">Partial</span>
-        </div>
-          <div className="p-2 flex ml-4 items-center bg-green-100 rounded-lg space-x-0.5  p-4 hover:shadow-sm transition-all transform hover:-translate-y-0.5 relative cursor-pointer border border-green-100"
-                title="You have REPOSTED their last post"
-                style={{ whiteSpace: 'pre-line' }}
-            >
-              <CheckCircle2 className={"w-3.5 h-3.5 text-green-500"} />
-              <span className="text-xs text-green-500 ml-1">Reposted</span>
-          </div>
-       </div>    */}  
-   {/*end legend*/}
 
+   {/*Start Show Activity Hours*/}  
+  {showActivityHours && !activityLoading && activityStats.topHours.length > 0 && (
+    // Activity Hours Stats Panel
+<div className="bg-white rounded-lg p-4 mb-4">
+    <div className="flex flex-col mb-2"> {/* Use flex-col and remove justify-between */}
+        <h3 className="text-sm font-medium text-blue-500 flex items-center gap-2">
+            <Clock className="w-4 h-4" />
+            Peak Engagement Times
+        </h3>
+        <p className="text-gray-400 text-xs font-normal mt-1"> {/* Adjusted mt-1 */}
+            Discover the best times to engage with your audience
+        </p>
+    </div>
+
+        <div className="grid grid-cols-3 gap-4">
+        {activityStats.topHours.map(({ hour, minutes, count, percentage }) => (
+  <div key={`${hour}-${minutes}`} className="bg-blue-50 rounded-lg p-3 text-center">
+    <div className="text-sm font-medium text-blue-600">
+      {formatHour(hour, minutes)}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                        {count} interactions
+                    </div>
+                    <div className="text-xs text-blue-400">
+                        {percentage.toFixed(1)}% of activity
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        <p className="text-xs text-gray-400 mt-2">
+            Based on {activityStats.totalInteractions} total interactions
+        </p>
+    </div>
+)}
+   {/*End Show Activity Hours*/}
+   
   
-
 {/* Sorting and Filtering Controls */}
 <div className="flex flex-col space-y-4 p-4 rounded-lg">
     <div className="flex flex-wrap items-center text-blue-500"> {/* Removed justify-between */}
@@ -537,7 +674,7 @@ return (
     </div>
 
     {/* Refresh Button Row */}
-    <div className="flex justify-start">
+    <div className="flex justify-start gap-4 p-4">
         <button
             onClick={handleUserRefresh}
             disabled={loading}
@@ -546,7 +683,18 @@ return (
             <RefreshCw className="w-3 h-3" />
             <span className="text-sm">{loading ? 'Refreshing...' : 'Refresh Interactions'}</span>
         </button>
+      
+        <button
+            onClick={handlePeakHours}
+            disabled={activityLoading}
+            className="p-2 text-white bg-gray-900 hover:bg-gray-700 rounded flex items-center space-x-2"
+        >
+    <Clock className="w-3 h-3" />
+    <span className="text-sm">{activityLoading ? 'Refreshing Time...' : 'Show Peak Hours'}</span>
+        </button>
+      
     </div>
+    
 </div>  
    
       {/*

@@ -1,7 +1,7 @@
 
 // Update the onClick handler in UsersGrid.tsx to show the UserAnalyticsSidebar
 import React, { useState, useEffect } from 'react';
-import { Users, AlertCircle, CheckCircle2, UserPlus, UsersRound, UserCheck, Handshake, ArrowUpDown, Filter, Repeat, RefreshCw, Clock } from 'lucide-react';
+import { Users, AlertCircle, CheckCircle2, UserPlus, UsersRound, UserCheck, Handshake, ArrowUpDown, Filter, Repeat, RefreshCw, Clock, X, Lightbulb, Heart } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
 import { User } from '../types/user';
 import { UserCard } from './users/UserCard';
@@ -14,6 +14,8 @@ import { UserAnalyticsSidebar } from './UserAnalyticsSidebar';
 //import { LoadingSpinner } from 'lucide-react';
 
 import { useActivityHours } from '../hooks/useActivityHours';
+import { Info, ChevronDown } from 'lucide-react';
+
 
 interface UsersGridProps {
   users: User[];
@@ -57,6 +59,8 @@ const [loading, setLoading] = useState(false);
 const [showActivityHours, setShowActivityHours] = useState(false);  
 const [activityLoading, setActivityLoading] = useState(false);
 const [activityError, setActivityError] = useState<string | null>(null);
+const [isLegendExpanded, setIsLegendExpanded] = useState(false);
+  
 //const { activityStats } = useActivityHours();
 //const { activityStats, loading: activityLoading, error: activityError } = useActivityHours();
 
@@ -290,7 +294,7 @@ const handleInteractionUpdate = (userDid: string, updates: {
   
   
  const categories = [
-    { id: 'All', label: 'Top User Interactions', icon: Users },
+    { id: 'All', label: 'Top Friends', icon: Heart },
     //{ id: 'Following', label: 'Following', icon: UserCheck },
     //{ id: 'Followers', label: 'Followers', icon: UserPlus },
     //{ id: 'Mutuals', label: 'Mutuals', icon: Handshake },
@@ -537,58 +541,98 @@ return (
             <span>{label}</span>
             </h2>        
           </button>
-    <p className="px-5 text-gray-500 text-sm font-normal mt-0.5">
-        Use the insights below to priorize your user engagement 
+    <p className="px-5 text-gray-500 text-sm font-normal mt-0.5"> 
+        Discover your biggest supporters & engage with them often
     </p>
     </div>
         ))}
         
     </div>
 
-   {/* Start Legend */}
-<div className="flex flex-wrap gap-4 p-4">
-    {/* Legend Items */}
-    {[
+{/* Start Legend */}
+<div className="mb-4">
+  <button
+    onClick={() => setIsLegendExpanded(!isLegendExpanded)} // Add this state
+    className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-all"
+  >
+    <div className="flex items-center space-x-2">
+      <Lightbulb className="w-4 h-4 text-blue-500" />
+      <h3 className="text-sm font-medium text-blue-500">
+        Learn what each user interaction status means . . .
+      </h3>
+    </div>
+    <ChevronDown 
+      className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
+        isLegendExpanded ? 'rotate-180' : ''
+      }`}
+    />
+  </button>
+
+  <div className={`transition-all duration-200 ease-in-out overflow-hidden ${
+    isLegendExpanded 
+      //? 'max-h-[200px] opacity-100' 
+      ? 'max-h-fit opacity-100'
+      : 'max-h-0 opacity-0'
+  }`}>
+    <div className="flex flex-wrap gap-4 p-4 bg-gray-50 rounded-b-lg border-t border-gray-100">
+      {[
         {
-            icon: <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />,
-            label: "Engaged: Liked AND Commented",
-            bgColor: "bg-blue-100",
-            textColor: "text-blue-500",
+          icon: <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />,
+          label: "Engaged: Liked AND Commented",
+          bgColor: "bg-blue-100",
+          textColor: "text-blue-500",
+          description: "You've liked and commented on their latest post"
         },
         {
-            icon: <AlertCircle className="w-3.5 h-3.5 text-red-400" />,
-            label: "Not Engaged: No interactions",
-            bgColor: "bg-red-100",
-            textColor: "text-red-400",
+          icon: <AlertCircle className="w-3.5 h-3.5 text-red-400" />,
+          label: "Not Engaged: No interactions",
+          bgColor: "bg-red-100",
+          textColor: "text-red-400",
+          description: "No interaction recorded on their latest post"
         },
         {
-            icon: <AlertCircle className="w-3.5 h-3.5 text-yellow-600" />,
-            label: "Partial: Liked OR Commented",
-            bgColor: "bg-yellow-100",
-            textColor: "text-yellow-600",
+          icon: <AlertCircle className="w-3.5 h-3.5 text-yellow-600" />,
+          label: "Partial: Liked OR Commented",
+          bgColor: "bg-yellow-100",
+          textColor: "text-yellow-600",
+          description: "You've engaged via like/comment on their post"
         },
         {
-            icon: <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />,
-            label: "Reposted: Reposted their post",
-            bgColor: "bg-green-100",
-            textColor: "text-green-500",
+          icon: <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />,
+          label: "Reposted: Reposted their post",
+          bgColor: "bg-green-100",
+          textColor: "text-green-500",
+          description: "You've shared their latest post to your feed"
         },
-    ].map((item, index) => (
+      ].map((item, index) => (
         <div
-            key={index}
-            className={`flex items-center space-x-2 p-2 rounded-lg ${item.bgColor} hover:shadow-sm transition-all transform hover:-translate-y-0.5 cursor-pointer`}
+          key={index}
+          className={`flex items-center space-x-2 p-3 rounded-lg ${item.bgColor} hover:shadow-sm transition-all min-w-[360px]`}
         >
+          <div className="flex items-center space-x-2">
             {item.icon}
-            <span className={`text-xs ${item.textColor}`}>{item.label}</span>
+            <div>
+              <span className={`text-xs font-medium ${item.textColor}`}>
+                {item.label}
+              </span>
+              <p className="text-xs text-gray-500 mt-0.5">
+                {item.description}
+              </p>
+            </div>
+          </div>
         </div>
-    ))}
+      ))}
+    </div>
+  </div>
 </div>
 {/* End Legend */}
+
 
    {/*Start Show Activity Hours*/}  
   {showActivityHours && !activityLoading && activityStats.topHours.length > 0 && (
     // Activity Hours Stats Panel
 <div className="bg-white rounded-lg p-4 mb-4">
+   <div className="flex justify-between items-start mb-2">
     <div className="flex flex-col mb-2"> {/* Use flex-col and remove justify-between */}
         <h3 className="text-sm font-medium text-blue-500 flex items-center gap-2">
             <Clock className="w-4 h-4" />
@@ -599,6 +643,16 @@ return (
         </p>
     </div>
 
+  {/*Add Close Button Here*/}
+        
+        <button 
+            onClick={() => setShowActivityHours(false)}
+            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+        >
+            <X className="w-4 h-4 text-gray-400" />
+        </button>
+  {/*End of adding close button*/}
+   </div>
         <div className="grid grid-cols-3 gap-4">
         {activityStats.topHours.map(({ hour, minutes, count, percentage }) => (
   <div key={`${hour}-${minutes}`} className="bg-blue-50 rounded-lg p-3 text-center">
