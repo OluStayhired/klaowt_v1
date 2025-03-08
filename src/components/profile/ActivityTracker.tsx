@@ -77,22 +77,12 @@ export function ActivityTracker() {
     <div className="bg-white rounded-xl p-4 shadow-sm space-y-4">
       {/* Engagement Tracker */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between text-sm">
-          <span className="flex text-gray-600">
-            Engagement Meter
-            <span className="flex items-center cursor-pointer hover:text-gray-500"
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
-            >
-              <Info className="w-3 h-3 text-gray-400 ml-0"/> 
-              {showTooltip && (
-              <div className="flex-1 absolute ml-0 bg-gray-800 w-full text-xs text-white px-1 py-1 rounded-md shadow-sm max-w-40 max-h-24 z-50000 mb-10">
-                  Aim for an engagement score of 35% before you post.↗️
-                </div>
-              )}
+        <div className="flex flex-col items-start text-sm">
+            <span className="text-gray-600">Hourly Engagement Tracker</span>
+            <span className="text-xs text-gray-400 rounded-full py-1 mt-1 inline-block">
+              Your engagement with other posts in the last hour 💡
             </span>
-          </span>
-        </div>
+          </div>
 
         {/* Circular Engagement Meter */}
         <div className="flex justify-center items-center">
@@ -133,10 +123,12 @@ export function ActivityTracker() {
       {/* Today's Posts */}
       <div className="flex items-center justify-between py-2 border-t border-gray-100">
         <div className="flex items-center space-x-2">
-          <SquarePen className="w-4 h-4 text-gray-500" />
-          <span className="text-sm text-gray-500">Today's Posts</span>
+           <div className="flex items-center p-1 bg-blue-100 rounded-lg">
+              <SquarePen className="w-4 h-4 text-blue-500" />
+           </div>
+          <span className="text-sm font-normal text-gray-500">Posts Today </span>
         </div>
-        <span className="text-sm font-medium">{formatNumber(todaysPosts)}</span>
+        <span className="text-sm text-blue-500 font-normal">{formatNumber(todaysPosts)} Post(s)</span>
       </div>
     </div>
   );

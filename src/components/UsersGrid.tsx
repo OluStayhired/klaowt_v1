@@ -60,6 +60,8 @@ const [showActivityHours, setShowActivityHours] = useState(false);
 const [activityLoading, setActivityLoading] = useState(false);
 const [activityError, setActivityError] = useState<string | null>(null);
 const [isLegendExpanded, setIsLegendExpanded] = useState(false);
+const [isGatheringData, setIsGatheringData] = useState(true);
+  
   
 //const { activityStats } = useActivityHours();
 //const { activityStats, loading: activityLoading, error: activityError } = useActivityHours();
@@ -78,6 +80,21 @@ const [activityStats, setActivityStats] = useState<{
   totalInteractions: 0
 });  
 
+useEffect(() => {
+  if (usersLoading) {
+    // Show gathering data message first
+    setIsGatheringData(true);
+    
+    // After 3 seconds, switch to loading interactions message
+    const timer = setTimeout(() => {
+      setIsGatheringData(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  } else {
+    setIsGatheringData(false);
+  }
+}, [usersLoading]);
 
   
   useEffect(() => {
@@ -488,7 +505,23 @@ const handleUserRefresh = async () => {
 //======================
 //end handle user refresh
 //======================
+
+if (usersLoading) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px] bg-white/50 rounded-lg">
+      <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-4" />
+      <p className="text-sm text-gray-500">
+        {isGatheringData 
+          ? "Gathering Bluesky Data..."
+          : "Loading user interactions..."
+        }
+      </p>
+    </div>
+  );
+}
   
+  
+  {/*  
 if (usersLoading) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px] bg-white/50 rounded-lg">
@@ -497,6 +530,7 @@ if (usersLoading) {
     </div>
   );
 }  
+  */}
 // Add the UserAnalyticsSidebar to the JSX
 return (
   <div className="flex relative">

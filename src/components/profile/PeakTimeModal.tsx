@@ -35,9 +35,9 @@ export function PeakTimeModal({ isOpen, onClose }: PeakTimeModalProps) {
 
   // Get time period icon
   const getTimeIcon = (hour: number) => {
-    if (hour >= 5 && hour < 12) return <Sunrise className="w-5 h-5 text-orange-400" />;
+    if (hour >= 5 && hour < 12) return <Sunrise className="w-5 h-5 text-blue-100" />;
     if (hour >= 12 && hour < 17) return <Sun className="w-5 h-5 text-yellow-400" />;
-    if (hour >= 17 && hour < 20) return <Sunset className="w-5 h-5 text-orange-500" />;
+    if (hour >= 17 && hour < 20) return <Sunset className="w-5 h-5 text-blue-200" />;
     return <Moon className="w-5 h-5 text-blue-400" />;
   };
 
@@ -134,7 +134,7 @@ export function PeakTimeModal({ isOpen, onClose }: PeakTimeModalProps) {
   if (!isOpen) return null;
 
   const modal = (
-    <div className="fixed inset-0 z-[9999] overflow-y-auto">
+    <div className="fixed inset-0 z-[9999] overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       
       <div className="fixed inset-0 flex items-center justify-center p-4">
@@ -151,7 +151,7 @@ export function PeakTimeModal({ isOpen, onClose }: PeakTimeModalProps) {
           </div>
 
           {/* Content */}
-          <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+          <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400">
             {loading ? (
               <div className="flex justify-center py-12">
                 <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
@@ -163,17 +163,17 @@ export function PeakTimeModal({ isOpen, onClose }: PeakTimeModalProps) {
                   <h3 className="text-sm font-semibold">Best Times to Post</h3>
                   <div className="grid grid-cols-3 gap-4">
                     {activityData.slice(0, 3).map((data, index) => (
-                      <div key={index} className="bg-gray-50 rounded-xl p-4">
+                      <div key={index} className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4">
                         <div className="flex items-center justify-between">
                           {getTimeIcon(data.hour)}
                           <div className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">
                             {data.percentage.toFixed(1)}% activity
                           </div>
                         </div>
-                        <p className="text-lg font-semibold mt-2">
+                        <p className="text-lg text-white font-semibold mt-2">
                           {formatHour(data.hour)}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-50">
                           {data.count} interactions
                         </p>
                       </div>
