@@ -576,7 +576,7 @@ return (
             </h2>        
           </button>
     <p className="px-5 text-gray-500 text-sm font-normal mt-0.5"> 
-        Discover your biggest supporters & engage with them often
+        Never miss a post from your biggest supporters on Bluesky
     </p>
     </div>
         ))}

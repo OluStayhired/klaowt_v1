@@ -338,8 +338,8 @@ const chartOptions = {
             <div className="text-left">
               <p className="text-sm text-gray-600">Follower Engagement Rate</p>
               <p className="text-xs text-gray-400 rounded-full py-1 mt-1 inline-block">
-              Analyze your most engaging posts over the past 90 days 💡
-            </p>
+              Dive deeper into your most engaging posts 💡
+              </p>
               <p className="text-2xl rounded-lg p-1 text-center font-bold text-blue-500">
                 {growthData?.metrics.engagementRate.toFixed(1)}%
               </p>
@@ -393,7 +393,7 @@ const chartOptions = {
           <div className="text-left">
               <p className="text-sm text-gray-600">Build Relationships Faster</p>
               <p className="text-xs text-gray-400 rounded-full py-1 mt-1 inline-block">
-              Engage with your biggest supporters on Bluesky 💡
+              Never miss a post from your biggest supporters 💡
           </p>
           </div>
           <div>

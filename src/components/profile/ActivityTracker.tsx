@@ -80,7 +80,7 @@ export function ActivityTracker() {
         <div className="flex flex-col items-start text-sm">
             <span className="text-gray-600">Hourly Engagement Tracker</span>
             <span className="text-xs text-gray-400 rounded-full py-1 mt-1 inline-block">
-              Your engagement with other posts in the last hour 💡
+              Track your activity with other posts in the last hour 💡
             </span>
           </div>
 
