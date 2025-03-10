@@ -309,7 +309,7 @@ const chartOptions = {
 </AccordionSection>
 
        <AccordionSection 
-        title="Analyze Engagement" 
+        title="Analyze Posts" 
         icon={<BarChart2 className="w-4 h-4 text-blue-500" />}
         defaultExpanded={false}
       >
@@ -374,8 +374,9 @@ const chartOptions = {
           </div>
     <button 
        onClick={handlePostEngagementClick}
-      className="bg-blue-500 text-white text-xs rounded px-3 py-2 mt-4">
-          Start Analysis
+      className="flex-1 flex items-center bg-blue-500 text-white text-xs rounded space-x-2 px-4 py-2 py-2 mt-4">
+        <BarChart2 className="w-3 h-3" />
+        <span>Start Analysis</span>
       </button>
         </>
       )}

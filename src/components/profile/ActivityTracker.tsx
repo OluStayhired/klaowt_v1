@@ -121,15 +121,19 @@ export function ActivityTracker() {
       </div>
 
       {/* Today's Posts */}
-      <div className="flex items-center justify-between py-2 border-t border-gray-100">
-        <div className="flex items-center space-x-2">
-           <div className="flex items-center p-1 bg-blue-100 rounded-lg">
-              <SquarePen className="w-4 h-4 text-blue-500" />
-           </div>
-          <span className="text-sm font-normal text-gray-500">Posts Today </span>
+      <div className="flex items-center justify-between space-x-1 py-4 border-t border-gray-100">
+    <div className="flex items-center space-x-2 bg-blue-50 rounded-lg">
+        <div className="flex items-center p-2">
+            <Info className="w-3 h-3 text-normal text-blue-500" />
         </div>
-        <span className="text-sm text-blue-500 font-normal">{formatNumber(todaysPosts)} Post(s)</span>
-      </div>
+        <span className="text-xs font-normal text-blue-500 py-3 px-2">
+          {todaysPosts === 0
+            ? "You haven't posted today"
+            : `You've posted (${formatNumber(todaysPosts)}) times today`}
+      </span>
+    </div>
+</div>
+      <span className="text-xs font-normal text-gray-400">Engage to 45% before you post</span>
     </div>
   );
 }
