@@ -336,7 +336,7 @@ const chartOptions = {
             </div>*/}
             
             <div className="text-left">
-              <p className="text-sm text-gray-600">Follower Engagement Rate</p>
+              <p className="text-sm text-gray-600">Post Engagement Rate</p>
               <p className="text-xs text-gray-400 rounded-full py-1 mt-1 inline-block">
               Dive deeper into your most engaging posts 💡
               </p>
