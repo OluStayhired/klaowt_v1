@@ -290,7 +290,7 @@ const chartOptions = {
               className="flex-1 flex items-center justify-center text-xs font-normal space-x-1 px-2 py-3 bg-gray-800 text-white hover:bg-gray-700 rounded transition-colors mt-8"
             >
               <Target className="w-4 h-4" />
-              <span>Start Focused Mode</span>
+              <span>Start Engaging Now</span>
             </button>
           </div>
         </div>

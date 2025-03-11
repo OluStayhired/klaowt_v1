@@ -884,9 +884,9 @@ const renderFeedView = () => {
                           <p className="text-xs text-gray-500">{subsection.description}</p>
                         </div>
                       </div>
-                      <CheckCircle className={`w-5 h-5 text-blue-300 transition-transform ${
+                      {/*<CheckCircle className={`w-5 h-5 text-blue-300 transition-transform ${
                         selectedSubsection === subsection.id ? '' : ''
-                      }`} />
+                      }`} />*/}
                     </div>
                   </button>
                 ))}
@@ -1098,7 +1098,7 @@ const renderContributors = () => {
 </button>
               )}
               <h2 className="text-xl font-semibold">
-                {currentScreen === 'main' ? 'Start your growth with Klaowt . . ' :
+                {currentScreen === 'main' ? 'Start Engaging . . ' :
                  currentScreen === 'planContent' ? 'Browse Posts' : 
                  currentScreen === 'engagement' ? 'Build Engagement' :
                  currentScreen === 'contributors' ? 'Follow Top Creators' : 
@@ -1148,28 +1148,33 @@ const renderContributors = () => {
     />
   ) : currentScreen === 'main' ? (
               // Start Keep existing main screen JSX...
-            <div className="grid grid-cols-2 gap-4">
-                <button
-                  onClick={() => setCurrentScreen('planContent')}
-                  className="p-6 border shadow-lg rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
-                >
-                  <NotebookPen className="w-8 h-8 text-blue-500 mb-2" />
-                  <h3 className="font-semibold mb-1">Create Content ✍️</h3>
-                  <p className="text-xs text-gray-600">
-                    Struggling for ideas, turn your existing comments & posts into engaging content.<span className="text-blue-500"> Click to Start</span>.  
-                  </p>
-                </button>
-                <button 
-                  onClick={() => setCurrentScreen('engagement')}
-                  className="p-6 border shadow-lg rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
-                >
-                  <TrendingUp className="w-8 h-8 text-blue-500 mb-2" />
-                  <h3 className="font-semibold mb-1">Build Engagement 🦋</h3>
-                  <p className="text-xs text-gray-600">
-                    Get your daily engagement plan. Create the daily habit to grow your audience.<span className="text-blue-500"> Click to Start</span>
-                  </p>
-                </button>
-              </div>
+              <div className="grid grid-cols-2 gap-4">
+    <button
+        onClick={() => setCurrentScreen('planContent')}
+        className="p-3 bg-gradient-to-l from-white via-gray-100 to-blue-100 border shadow-lg rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left flex items-center" // Changed items-start to items-center
+    >
+        
+        <div>
+            <NotebookPen className="w-6 h-6 text-blue-500 rounded-lg mr-2" />
+            <h3 className="font-semibold mb-1">Create Content</h3>
+            <p className="text-xs text-gray-600">
+                Struggling for ideas, turn your existing comments & posts into engaging content.<span className="text-blue-500"> Click to Start</span>.
+            </p>
+        </div>
+    </button>
+    <button
+        onClick={() => setCurrentScreen('engagement')}
+        className="p-3 bg-gradient-to-l from-white via-gray-100 to-blue-100 border shadow-lg rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left flex items-center" // Changed items-start to items-center
+    >
+        <div>
+            <TrendingUp className="w-6 h-6 text-blue-500 mr-2" />
+            <h3 className="font-semibold mb-1">Grow Audience</h3>
+            <p className="text-xs text-gray-600">
+                Get your daily engagement plan. Create the daily habit to grow your audience.<span className="text-blue-500"> Click to Start</span>.
+            </p>
+        </div>
+    </button>
+</div>
       // End Keep esisting main screen JSX...
             ) : currentScreen === 'engagement' ? (
               renderEngagementBuilder()
