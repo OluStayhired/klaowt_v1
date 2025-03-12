@@ -159,11 +159,12 @@ export function PeakTimeModal({ isOpen, onClose }: PeakTimeModalProps) {
             ) : (
               <>
                 {/* Peak Hours */}
-                <div className="space-y-4">
-                  <h3 className="text-sm font-semibold">Best Times to Post</h3>
+                <div className="space-y-0.5">
+                  <h3 className="text-sm font-semibold mb-0.5 space-y-0.5">Best Times to Post</h3>
+                  <p className="text-gray-400 text-xs mb-4">Take control of your day - Pick the best times to engage💡</p>
                   <div className="grid grid-cols-3 gap-4">
                     {activityData.slice(0, 3).map((data, index) => (
-                      <div key={index} className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4">
+                      <div key={index} className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl mt-4 p-4">
                         <div className="flex items-center justify-between">
                           {getTimeIcon(data.hour)}
                           <div className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">
@@ -184,10 +185,14 @@ export function PeakTimeModal({ isOpen, onClose }: PeakTimeModalProps) {
               
                 {/* Activity Chart */}
                 <div className="bg-white rounded-xl p-6 border">
-                  <h3 className="text-sm font-semibold mb-4 flex items-center space-x-2">
+                  <h3 className="text-sm font-semibold mb-0.5 flex items-center space-x-2">
                     <BarChart2 className="w-5 h-5 text-blue-500" />
-                    <span>24-Hour Activity Distribution</span>
+                    <span>24-Hour Audience Activity
+          
+                    </span>
+                    
                   </h3>
+                  <p className="text-gray-400 text-xs mb-4">Build Better Relationships - Track when your followers are online💡</p>
                   <div className="h-64">
                     <Line data={chartData} options={chartOptions} />
                   </div>
