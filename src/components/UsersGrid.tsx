@@ -673,7 +673,7 @@ return (
             Peak Engagement Times
         </h3>
         <p className="text-gray-400 text-xs font-normal mt-1"> {/* Adjusted mt-1 */}
-            Discover the best times to engage with your audience
+            Discover the best times to engage with your audience 💡
         </p>
     </div>
 
