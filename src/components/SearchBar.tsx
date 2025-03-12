@@ -70,7 +70,7 @@ export function SearchBar({ onSearch, placeholder }: SearchBarProps) {
           type="text"
           value={query}
           onChange={handleInputChange}
-          placeholder={placeholder || "Search for feeds on Bluesky 🦋"}
+          placeholder={placeholder || "Search every feed on Bluesky 🦋"}
           className="w-full pl-10 pr-12 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
         />
        <div className="absolute right-3 flex items-center space-x-2">

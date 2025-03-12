@@ -57,10 +57,10 @@ export function InsightsPanel({
         <h3 className="text-lg font-semibold flex items-center space-x-2">
           <Users className="w-5 h-5 text-blue-500" />
           <span className="flex items-left" >
-             Top Contributors
+             Top Creators
                 <span className="flex items-center cursor-pointer hover:text-gray-500"
             onMouseEnter={() =>{setShowContributorsTooltip(true);
-        setTooltipMessage("instantly follow the top contributors on this feed ↗️");
+        setTooltipMessage("instantly follow the top creators on this feed ↗️");
             }}
                     onMouseLeave={() => setShowContributorsTooltip(false)}
                 >
@@ -74,7 +74,7 @@ export function InsightsPanel({
           </span>
         </h3>
                  <span className="flex items-left text-xs text-gray-400">
-            Discover & follow big accounts 🦋 with similar interests!
+            Track and instantly follow top creators on this feed!💡
           </span>
         <div className="bg-white rounded-lg shadow-sm p-4">
           <ContributorsTable contributors={data.topContributors} />
@@ -87,9 +87,9 @@ export function InsightsPanel({
           <TrendingUp className="w-5 h-5 text-blue-500" />
           <span className="flex items-left">
             Trending Posts 
-                <span className="flex items-center cursor-pointer hover:text-gray-500"
+                <span className="flex items-center cursor-pointer hover:text-gray-500 relative"
                       onMouseEnter={() =>{setShowContributorsTooltip(true);
-        setTooltipMessage("view & reply to trending posts 🔥 from top contributors ↗️");
+        setTooltipMessage("view & reply to trending posts 🔥 from top creators");
             }}
                     onMouseLeave={() => setShowContributorsTooltip(false)}
                 >
@@ -103,7 +103,7 @@ export function InsightsPanel({
               </span>
         </h3>
          <span className="flex items-left text-xs text-gray-400">
-            Engage with trending posts 👋 to get seen by more people!
+            Comment on posts in this feed to boost your visibility!👋
           </span>
         <div className="bg-white rounded-lg shadow-sm p-4">
          
