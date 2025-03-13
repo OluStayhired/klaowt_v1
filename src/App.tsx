@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Layout, LogIn, LogOut, UserSearch, Radio, MessageCircle, BarChart2, Activity, KeyRound, ChevronDown, ChevronUp} from 'lucide-react';
+import { Layout, LogIn, LogOut, UserSearch, Radio, MessageCircle, BarChart2, Activity, KeyRound, ChevronDown, ThumbsUp, ChevronUp} from 'lucide-react';
 import { Bookmark } from 'lucide-react';
 import { CircleChevronUp } from 'lucide-react';
 import { Handshake } from 'lucide-react';
@@ -10,6 +10,7 @@ import { Podcast } from 'lucide-react';
 import { Volume2 } from 'lucide-react';
 import { LoginModal } from './components/LoginModal';
 import { GrowAudienceModal } from './components/profile/GrowAudienceModal';
+import { FeedbackModal } from './components/FeedbackModal';
 import { FeedsGrid } from './components/FeedsGrid';
 import { User } from './types/user';
 import { UsersGrid } from './components/UsersGrid';
@@ -49,6 +50,7 @@ const [activeFaq, setActiveFaq] = useState<number | null>(null);
   // Inside the App component add User states
 const { users, loading: usersLoading, error: usersError } = useUsers();
 const [selectedUser, setSelectedUser] = useState<User | null>(null);
+const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);  
 
 
 // Set up login success handler
@@ -198,6 +200,11 @@ const [selectedUser, setSelectedUser] = useState<User | null>(null);
     setFeedType('popular');
   };
 
+  const handleFeedbackClick = () => {
+    setIsFeedbackModalOpen(true);
+  };
+
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-blue-50 to-indigo-75">
       <header className="bg-white shadow-sm sticky top-0 z-10">
@@ -214,6 +221,15 @@ const [selectedUser, setSelectedUser] = useState<User | null>(null);
               <h1 className="text-xl font-bold bg-blue-500 bg-clip-text text-gray-900">Klaowt</h1>
               {/*<span className="text-gray-800 px-2 bg-yellow-400 rounded font-bold"> beta </span>*/}
             </div>
+            <div className="flex items-center justify-end"> {/*Added for feedback button*/}  
+        {isAuthenticated && (
+            <button 
+              onClick={handleFeedbackClick}
+              className="flex items-center space-x-2 px-4 py-2 rounded-md bg-gray-900 text-white hover:bg-gray-700 transition-colors mr-4">
+                <ThumbsUp className="w-4 h-4" />
+                <span>Feedback</span>
+            </button>
+           )} 
             <button
               onClick={() => isAuthenticated ? logout() : setIsLoginModalOpen(true)}
               className="flex items-center space-x-2 px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors"
@@ -230,6 +246,7 @@ const [selectedUser, setSelectedUser] = useState<User | null>(null);
                 </>
               )}
             </button>
+      </div> {/*Newly added DIV for feedback button*/}
           </div>
         </div>
       </header>
@@ -615,6 +632,12 @@ const [selectedUser, setSelectedUser] = useState<User | null>(null);
   isOpen={isGrowModalOpen}
   onClose={() => setIsGrowModalOpen(false)}
 />
+
+<FeedbackModal
+        isOpen={isFeedbackModalOpen}
+        onClose={() => setIsFeedbackModalOpen(false)}
+    />
+
       
     </div>
   );

@@ -243,7 +243,7 @@ const chartOptions = {
   if (!user) return null;
 
   return (
-     <div className="overflow-y-auto max-h-[100vh]  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400"> {/* modified scrollbar Scrollable container */}
+     <div className="overflow-y-auto h-[80vh]  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400"> {/* modified scrollbar Scrollable container */}
     <div className="bg-gradient-to-r from-white via-gray-100 to-blue-100 space-y-3 bg-gray-50/50 p-3 rounded-xl">
       {/* Profile Header */}
       <div className="bg-white rounded-xl p-3 shadow-sm">
@@ -426,7 +426,7 @@ const chartOptions = {
               Discover top creators & trending posts from over 1000 feeds 💡
           </p>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 w-fit">
           <button
             onClick={() => onFeedTypeChange('popular')}
             className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
@@ -438,6 +438,7 @@ const chartOptions = {
           <button
             onClick={() => onFeedTypeChange('pinned')}
             className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+            //style={{ minWidth: '100px' }}
           >
             <Pin className="w-3 h-3 mr-2" />
             <span className="text-xs">Pinned Feeds</span>
