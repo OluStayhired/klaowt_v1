@@ -220,13 +220,13 @@ function determineFeedCategory(text: string): string {
             {title}
           </h2>
         </div>
-        <p className="flex-1 text-gray-500 text-xs mt-1 space-y-0"> Discover and Pin interesting feeds to your BlueSky timeline</p>
+        <p className="flex-1 text-gray-500 text-xs mt-1 space-y-0"> Discover and Pin interesting feeds to your Bluesky timeline 📌</p>
         
-        <CategoryFilter
+        {/*<CategoryFilter
           categories={categories}
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
-        />
+      />*/}
 
         {notification && (
           <Notification

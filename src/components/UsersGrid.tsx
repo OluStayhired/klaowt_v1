@@ -689,11 +689,12 @@ return (
    </div>
         <div className="grid grid-cols-3 gap-4">
         {activityStats.topHours.map(({ hour, minutes, count, percentage }) => (
-  <div key={`${hour}-${minutes}`} className="bg-blue-50 rounded-lg p-3 text-center">
-    <div className="text-sm font-medium text-blue-600">
+  <div key={`${hour}-${minutes}`} 
+    className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-3 text-center">
+    <div className="text-sm font-medium text-white">
       {formatHour(hour, minutes)}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-xs text-gray-50 mt-1">
                         {count} interactions
                     </div>
                     <div className="text-xs text-blue-400">
